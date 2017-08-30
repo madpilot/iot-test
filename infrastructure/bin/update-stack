@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -eo pipefail
+
+STACK_NAME="${1:?"You need to specify a stack name"}"
+
+echo "Compiling template"
+
+bundle exec cfoo > stack.json
+
+PARAMS_FILE=params.json
+if [[ -e "${STACK_NAME}-params.json" ]]; then
+  PARAMS_FILE="${STACK_NAME}-params.json"
+fi
+
+REGION=${AWS_DEFAULT_REGION:-ap-southeast-2}
+
+CIRRUS_OPTS=(--file stack.json --parameters "${PARAMS_FILE}" --region "${REGION}" --capabilities CAPABILITY_IAM)
+echo "Using options for ${STACK_NAME}: ${CIRRUS_OPTS[@]}"
+cirrus diff "${STACK_NAME}" "${CIRRUS_OPTS[@]}"
+
+read -p "Okay to apply changes? (Y/N) " -n 1 -r OKAY
+if [[ $OKAY =~ ^[Yy]$ ]]; then
+  echo
+  echo "Updating Stack.."
+  cirrus update "${STACK_NAME}" "${CIRRUS_OPTS[@]}"
+fi
+

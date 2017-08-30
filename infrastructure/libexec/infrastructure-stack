@@ -2,12 +2,9 @@
 # Provide infrastructure completions
 # Usage: infrastructure stack [application] [action] [stack-name]
 # Summary: Manage Cloudformation stacks
-# Help:
-#   Applications:
-#   - iot
 #
 # Example:
-#   infrastructure stack update iot development
+#   infrastructure stack update iot
 
 set -eo pipefail
 
@@ -18,13 +15,13 @@ case "$1" in
     echo diff
   ;;
   create)
-    docker-compose run --rm -w "/tools/$2/cloudformation" infrastructure_tools bash -c "/tools/bin/create-stack ${@:3}"
+    docker-compose run --rm -w "/tools/app/cloudformation" infrastructure bash -c "/tools/bin/create-stack ${@:2}"
   ;;
   update)
-    docker-compose run --rm -w "/tools/$2/cloudformation" infrastructure_tools bash -c "/tools/bin/update-stack ${@:3}"
+    docker-compose run --rm -w "/tools/app/cloudformation" infrastructure bash -c "/tools/bin/update-stack ${@:2}"
   ;;
   diff)
-    docker-compose run --rm -w "/tools/$2/cloudformation" infrastructure_tools bash -c "/tools/bin/diff-stack ${@:3}"
+    docker-compose run --rm -w "/tools/app/cloudformation" infrastructure bash -c "/tools/bin/diff-stack ${@:2}"
   ;;
   *)
     infrastructure help stack

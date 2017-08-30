@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     image: iot-test/infrastructure
     volumes:
-      - .:/tools/
+      - ./infrastructure:/tools/
       - $HOME/.aws:/root/.aws:ro
     tmpfs:
       - /tmp
