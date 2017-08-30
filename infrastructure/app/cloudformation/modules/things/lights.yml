@@ -11,7 +11,7 @@ Resources:
     Type: "AWS::IoT::Thing"
     Properties:
       ThingName: "LoungeRoomLight"
-  BabysRoomRoomLight:
+  BabysRoomLight:
     Type: "AWS::IoT::Thing"
     Properties:
-      ThingName: "BabysRoomRoomLight"
+      ThingName: "BabysRoomLight"
