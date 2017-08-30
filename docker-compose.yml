@@ -1,0 +1,18 @@
+---
+version: '2'
+
+services:
+  infrastructure:
+    build:
+      context: infrastructure/.
+      dockerfile: Dockerfile
+    image: iot-test/infrastructure
+    volumes:
+      - .:/tools/
+      - $HOME/.aws:/root/.aws:ro
+    tmpfs:
+      - /tmp
+    environment:
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+      AWS_DEFAULT_REGION:
