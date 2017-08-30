@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Provide infrastructure completions
+# Usage: infrastructure debug
+# Summary: Push and Pull Global IAM configuration
+
+set -eo pipefail
+
+case "$1" in
+  --complete)
+    echo push
+    echo pull
+  ;;
+  *)
+    docker-compose run --rm infrastructure_tools iamy $@
+  ;;
+esac

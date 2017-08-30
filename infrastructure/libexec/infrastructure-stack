@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Provide infrastructure completions
+# Usage: infrastructure stack [application] [action] [stack-name]
+# Summary: Manage Cloudformation stacks
+# Help:
+#   Applications:
+#   - base
+#   - manual
+#   - raisebook-app
+#   - bookbuild-app
+#
+# Example:
+#   infrastructure stack update raisebook-app development
+#   infrastructure stack update manual manual
+#   infrastructure stack update bookbuild-app compliance-bookbuild
+
+set -eo pipefail
+
+case "$1" in
+  --complete)
+    echo create
+    echo update
+    echo diff
+  ;;
+  create)
+    docker-compose run --rm -w "/tools/$2/cloudformation" infrastructure_tools bash -c "/tools/bin/create-stack ${@:3}"
+  ;;
+  update)
+    docker-compose run --rm -w "/tools/$2/cloudformation" infrastructure_tools bash -c "/tools/bin/update-stack ${@:3}"
+  ;;
+  diff)
+    docker-compose run --rm -w "/tools/$2/cloudformation" infrastructure_tools bash -c "/tools/bin/diff-stack ${@:3}"
+  ;;
+  *)
+    infrastructure help stack
+  ;;
+esac
