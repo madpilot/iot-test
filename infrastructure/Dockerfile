@@ -9,7 +9,9 @@ RUN apk --update add bash coreutils nodejs nodejs-npm ruby-bundler \
                      ruby-dev build-base \
                      py-pip git \
                      ca-certificates \
-                     openssh-client
+                     openssl \
+                     openssh-client \
+                     jq
 
 RUN pip install awscli
 COPY docker_bin/iamy-linux-amd64 /usr/bin/iamy
@@ -17,6 +19,8 @@ COPY docker_bin/iamy-linux-amd64 /usr/bin/iamy
 RUN mkdir /tools/
 WORKDIR /tools/
 COPY . /tools/
+
+RUN mkdir /certificates/
 
 RUN npm install -g cirrus
 RUN bundle install --clean --system

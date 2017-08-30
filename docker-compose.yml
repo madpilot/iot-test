@@ -9,6 +9,7 @@ services:
     image: iot-test/infrastructure
     volumes:
       - ./infrastructure:/tools/
+      - ./certificates:/certificates
       - $HOME/.aws:/root/.aws:ro
     tmpfs:
       - /tmp

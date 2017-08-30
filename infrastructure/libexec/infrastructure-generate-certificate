@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Generate a CSR for a thing
+# Generate and download a certificate for a thing
 # Usage: infrastructure certificate [thing]
 # Summary: Manage Cloudformation stacks
 #
 # Example:
-#   infrastructure generate-csr BedroomLamp
+#   infrastructure generate-certificate BedroomLamp
 
 set -eo pipefail
 
