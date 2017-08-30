@@ -4,10 +4,10 @@
 # Summary: Manage Cloudformation stacks
 # Help:
 #   Applications:
-#   - base
+#   - iot
 #
 # Example:
-#   infrastructure stack update base development
+#   infrastructure stack update iot development
 
 set -eo pipefail
 
