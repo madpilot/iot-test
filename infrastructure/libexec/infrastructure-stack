@@ -5,14 +5,9 @@
 # Help:
 #   Applications:
 #   - base
-#   - manual
-#   - raisebook-app
-#   - bookbuild-app
 #
 # Example:
-#   infrastructure stack update raisebook-app development
-#   infrastructure stack update manual manual
-#   infrastructure stack update bookbuild-app compliance-bookbuild
+#   infrastructure stack update base development
 
 set -eo pipefail
 
