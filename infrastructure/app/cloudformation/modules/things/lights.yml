@@ -1,0 +1,17 @@
+Resources:
+  BedroomLight:
+    Type: "AWS::IoT::Thing"
+    Properties:
+      ThingName: "BedroomLight"
+  BedroomLamp:
+    Type: "AWS::IoT::Thing"
+    Properties:
+      ThingName: "BedroomLamp"
+  LoungeRoomLight:
+    Type: "AWS::IoT::Thing"
+    Properties:
+      ThingName: "LoungeRoomLight"
+  BabysRoomRoomLight:
+    Type: "AWS::IoT::Thing"
+    Properties:
+      ThingName: "BabysRoomRoomLight"

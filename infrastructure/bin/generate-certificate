@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eo pipefail
+
+THING_NAME="${1:?"You need to specify a thing name"}"
+
+echo "TODO: Build"
+

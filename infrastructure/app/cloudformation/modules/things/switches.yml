@@ -1,0 +1,9 @@
+Resources:
+  GarageDoor:
+    Type: "AWS::IoT::Thing"
+    Properties:
+      ThingName: "GarageDoor"
+  CoffeeMachine:
+    Type: "AWS::IoT::Thing"
+    Properties:
+      ThingName: "CoffeeMachine"

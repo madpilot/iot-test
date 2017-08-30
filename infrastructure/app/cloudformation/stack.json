@@ -1,3 +1,41 @@
 {
-  "AWSTemplateFormatVersion": "2010-09-09"
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "BedroomLight": {
+      "Type": "AWS::IoT::Thing",
+      "Properties": {
+        "ThingName": "BedroomLight"
+      }
+    },
+    "BedroomLamp": {
+      "Type": "AWS::IoT::Thing",
+      "Properties": {
+        "ThingName": "BedroomLamp"
+      }
+    },
+    "LoungeRoomLight": {
+      "Type": "AWS::IoT::Thing",
+      "Properties": {
+        "ThingName": "LoungeRoomLight"
+      }
+    },
+    "BabysRoomRoomLight": {
+      "Type": "AWS::IoT::Thing",
+      "Properties": {
+        "ThingName": "BabysRoomRoomLight"
+      }
+    },
+    "GarageDoor": {
+      "Type": "AWS::IoT::Thing",
+      "Properties": {
+        "ThingName": "GarageDoor"
+      }
+    },
+    "CoffeeMachine": {
+      "Type": "AWS::IoT::Thing",
+      "Properties": {
+        "ThingName": "CoffeeMachine"
+      }
+    }
+  }
 }

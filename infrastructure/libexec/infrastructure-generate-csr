@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Generate a CSR for a thing
+# Usage: infrastructure certificate [thing]
+# Summary: Manage Cloudformation stacks
+#
+# Example:
+#   infrastructure generate-csr BedroomLamp
+
+set -eo pipefail
+
+docker-compose run --rm infrastructure bash -c "/tools/bin/generate-certificate ${@:1}"
