@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -eo pipefail
+
+THING_NAME="${1:?"You need to specify a thing name"}"
+KEY_FILE=/certificates/${THING_NAME}.key.pem
+CSR_FILE=/certificates/${THING_NAME}.csr.pem
+
+echo "Generating a certificate key"
+openssl genrsa -out ${KEY_FILE} 2048
+
+echo "Generating a CSR"
+openssl req -new -sha256 -key ${KEY_FILE} -out ${CSR_FILE}

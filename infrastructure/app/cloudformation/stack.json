@@ -4,7 +4,6 @@
     "ConnectPolicy": {
       "Type": "AWS::IoT::Policy",
       "Properties": {
-        "PolicyName": "IotConnect",
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": {
@@ -12,152 +11,7 @@
             "Action": [
               "iot:Connect"
             ],
-            "Resource": [
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/BabysRoomLight"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/BedroomLamp"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/GarageDoor"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/CoffeeMachine"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/BedroomLight"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/LougeRoomLight"
-                  ]
-                ]
-              }
-            ]
+            "Resource": "*"
           }
         }
       }
@@ -165,7 +19,6 @@
     "PublishPolicy": {
       "Type": "AWS::IoT::Policy",
       "Properties": {
-        "PolicyName": "IotPublish",
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": {
@@ -173,56 +26,7 @@
             "Action": [
               "iot:Publish"
             ],
-            "Resource": [
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/GarageDoor"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/CoffeeMachine"
-                  ]
-                ]
-              }
-            ]
+            "Resource": "*"
           }
         }
       }
@@ -230,7 +34,6 @@
     "ReceivePolicy": {
       "Type": "AWS::IoT::Policy",
       "Properties": {
-        "PolicyName": "IotReceive",
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": {
@@ -238,152 +41,7 @@
             "Action": [
               "iot:Receive"
             ],
-            "Resource": [
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/BabysRoomLight"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/BedroomLamp"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/GarageDoor"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/CoffeeMachine"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/BedroomLight"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/LougeRoomLight"
-                  ]
-                ]
-              }
-            ]
+            "Resource": "*"
           }
         }
       }
@@ -391,7 +49,6 @@
     "SubscribePolicy": {
       "Type": "AWS::IoT::Policy",
       "Properties": {
-        "PolicyName": "IotSubscribe",
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": {
@@ -399,191 +56,166 @@
             "Action": [
               "iot:Subscribe"
             ],
-            "Resource": [
+            "Resource": "*"
+          }
+        }
+      }
+    },
+    "BedroomLightCertificate": {
+      "Type": "AWS::IoT::Certificate",
+      "Properties": {
+        "CertificateSigningRequest": {
+          "Ref": "BedroomLightCertificateSigningRequest"
+        },
+        "Status": "ACTIVE"
+      }
+    },
+    "BedroomLightCertificateAttach": {
+      "Type": "AWS::IoT::ThingPrincipalAttachment",
+      "Properties": {
+        "ThingName": {
+          "Ref": "BedroomLight"
+        },
+        "Principal": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
               {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/BabysRoomLight"
-                  ]
-                ]
+                "Ref": "AWS::Partition"
               },
+              ":iot:",
               {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/BedroomLamp"
-                  ]
-                ]
+                "Ref": "AWS::Region"
               },
+              ":",
               {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/GarageDoor"
-                  ]
-                ]
+                "Ref": "AWS::AccountId"
               },
+              ":cert/",
               {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/CoffeeMachine"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/BedroomLight"
-                  ]
-                ]
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":iot:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::StackName"
-                    },
-                    ":thing/LougeRoomLight"
-                  ]
-                ]
+                "Ref": "BedroomLightCertificate"
               }
             ]
-          }
+          ]
+        }
+      }
+    },
+    "BedroomLightConnectPolicyAttach": {
+      "Type": "AWS::IoT::PolicyPrincipalAttachment",
+      "Properties": {
+        "PolicyName": {
+          "Ref": "ConnectPolicy"
+        },
+        "Principal": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iot:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":cert/",
+              {
+                "Ref": "BedroomLightCertificate"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "BedroomLightReceivePolicyAttach": {
+      "Type": "AWS::IoT::PolicyPrincipalAttachment",
+      "Properties": {
+        "PolicyName": {
+          "Ref": "ReceivePolicy"
+        },
+        "Principal": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iot:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":cert/",
+              {
+                "Ref": "BedroomLightCertificate"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "BedroomLightSubscribePolicyAttach": {
+      "Type": "AWS::IoT::PolicyPrincipalAttachment",
+      "Properties": {
+        "PolicyName": {
+          "Ref": "SubscribePolicy"
+        },
+        "Principal": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iot:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":cert/",
+              {
+                "Ref": "BedroomLightCertificate"
+              }
+            ]
+          ]
         }
       }
     },
     "BedroomLight": {
       "Type": "AWS::IoT::Thing",
       "Properties": {
-        "ThingName": "BedroomLight"
+        "ThingName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-BedroomLight"
+            ]
+          ]
+        }
       }
-    },
-    "BedroomLamp": {
-      "Type": "AWS::IoT::Thing",
-      "Properties": {
-        "ThingName": "BedroomLamp"
-      }
-    },
-    "LoungeRoomLight": {
-      "Type": "AWS::IoT::Thing",
-      "Properties": {
-        "ThingName": "LoungeRoomLight"
-      }
-    },
-    "BabysRoomLight": {
-      "Type": "AWS::IoT::Thing",
-      "Properties": {
-        "ThingName": "BabysRoomLight"
-      }
-    },
-    "GarageDoor": {
-      "Type": "AWS::IoT::Thing",
-      "Properties": {
-        "ThingName": "GarageDoor"
-      }
-    },
-    "CoffeeMachine": {
-      "Type": "AWS::IoT::Thing",
-      "Properties": {
-        "ThingName": "CoffeeMachine"
-      }
+    }
+  },
+  "Parameters": {
+    "BedroomLightCertificateSigningRequest": {
+      "Type": "String",
+      "Description": "Certificate Signing Request for the Bedroom Light",
+      "Default": "-----BEGIN CERTIFICATE REQUEST-----\nMIIC1jCCAb4CAQAwgZAxCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES\nMBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u\nczEVMBMGA1UEAwwMQmVkcm9vbUxpZ2h0MSQwIgYJKoZIhvcNAQkBFhVteWxlc0Bt\nYWRwaWxvdC5jb20uYXUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDw\neXxFebXRfh14tHmZFXZe5XjmqO4CV+yrpziK4DIpyWmRusEYz3YgyuRwei1qyjQO\nYgYqnTLMlsptOy28s+MZMRcoXZXdCAC8B22+nD3SpERAYcOAkbmPV8SbcBZBWED8\nyhh0a/JXvFyeOa7cSBTgY71DoidT/8+4Kn6VYxTFFc6/ECm/MI3QwwCBu3eRNxZS\nFhscnRZLBM9EB8cwpaTlVq/+N8UNa5DuYjJ42Gis1yGlyxtP4yd7kp/75t2tdCJT\n00rNaH69KxrU6DLlSZ9B4ZDMz/4W5uWBvXBnaNGFS+PBt6xbeI6Unxfa9x6d0E0N\nYmy7/nyKWDsQ9S8m8NsJAgMBAAGgADANBgkqhkiG9w0BAQsFAAOCAQEArICB5c9V\n4yxc12HEP0rxE80puFhYVwpSBgynY6gWww2DMpFtnSTXR/C001UEATQb2UVNpbPt\nXUaXCqIB8zYy54QyVy2OtoV0/qvMQ8Bcs/nIC4/awv+gJHZoPL8LNBz3UhZbh01x\n5pX3q3GVVgVuPtOFOkmr9kIJfLaYEe93kDLJbLny3X0Yzmy3W23lTBtb4IZnydqA\nTT2i1m2FrUwr7DUB5UlsqxMlYx5ekr0qkrMLH8r5QpaijoQ1FG+/DtOA8Kq9Yyg8\nnqZZctFk9U/RKmH2EQh32Vp/zFz/+eRKVCHcdeVuIxEhOD3Y/pbrRr4z/0XZvDSI\nV3nGu12vq2teyA==\n-----END CERTIFICATE REQUEST-----\n"
     }
   }
 }

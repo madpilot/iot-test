@@ -1,0 +1,5 @@
+Resources:
+  BedroomLight:
+    Type: "AWS::IoT::Thing"
+    Properties:
+      ThingName: $(AWS::StackName)-BedroomLight

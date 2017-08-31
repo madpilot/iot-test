@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-# Generate and download a certificate for a thing
+# Generate csr for a thing
 # Usage: infrastructure certificate [thing]
-# Summary: Manage Cloudformation stacks
 #
 # Example:
-#   infrastructure generate-certificate BedroomLamp
+#   infrastructure generate-csr BedroomLamp
 
 set -eo pipefail
 
-docker-compose run --rm infrastructure bash -c "/tools/bin/generate-certificate ${@:1}"
+docker-compose run --rm infrastructure bash -c "/tools/bin/generate-csr ${@:1}"

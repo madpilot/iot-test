@@ -1,0 +1,55 @@
+---
+Parameters:
+  BedroomLightCertificateSigningRequest:
+    Type: String
+    Description: Certificate Signing Request for the Bedroom Light
+    Default: |
+      -----BEGIN CERTIFICATE REQUEST-----
+      MIIC1jCCAb4CAQAwgZAxCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES
+      MBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u
+      czEVMBMGA1UEAwwMQmVkcm9vbUxpZ2h0MSQwIgYJKoZIhvcNAQkBFhVteWxlc0Bt
+      YWRwaWxvdC5jb20uYXUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDw
+      eXxFebXRfh14tHmZFXZe5XjmqO4CV+yrpziK4DIpyWmRusEYz3YgyuRwei1qyjQO
+      YgYqnTLMlsptOy28s+MZMRcoXZXdCAC8B22+nD3SpERAYcOAkbmPV8SbcBZBWED8
+      yhh0a/JXvFyeOa7cSBTgY71DoidT/8+4Kn6VYxTFFc6/ECm/MI3QwwCBu3eRNxZS
+      FhscnRZLBM9EB8cwpaTlVq/+N8UNa5DuYjJ42Gis1yGlyxtP4yd7kp/75t2tdCJT
+      00rNaH69KxrU6DLlSZ9B4ZDMz/4W5uWBvXBnaNGFS+PBt6xbeI6Unxfa9x6d0E0N
+      Ymy7/nyKWDsQ9S8m8NsJAgMBAAGgADANBgkqhkiG9w0BAQsFAAOCAQEArICB5c9V
+      4yxc12HEP0rxE80puFhYVwpSBgynY6gWww2DMpFtnSTXR/C001UEATQb2UVNpbPt
+      XUaXCqIB8zYy54QyVy2OtoV0/qvMQ8Bcs/nIC4/awv+gJHZoPL8LNBz3UhZbh01x
+      5pX3q3GVVgVuPtOFOkmr9kIJfLaYEe93kDLJbLny3X0Yzmy3W23lTBtb4IZnydqA
+      TT2i1m2FrUwr7DUB5UlsqxMlYx5ekr0qkrMLH8r5QpaijoQ1FG+/DtOA8Kq9Yyg8
+      nqZZctFk9U/RKmH2EQh32Vp/zFz/+eRKVCHcdeVuIxEhOD3Y/pbrRr4z/0XZvDSI
+      V3nGu12vq2teyA==
+      -----END CERTIFICATE REQUEST-----
+
+Resources:
+  BedroomLightCertificate:
+    Type: "AWS::IoT::Certificate"
+    Properties:
+      CertificateSigningRequest: $(BedroomLightCertificateSigningRequest)
+      Status: ACTIVE
+
+  BedroomLightCertificateAttach:
+    Type: "AWS::IoT::ThingPrincipalAttachment"
+    Properties:
+      ThingName: $(BedroomLight)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(BedroomLightCertificate)
+
+  BedroomLightConnectPolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(ConnectPolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(BedroomLightCertificate)
+
+  BedroomLightReceivePolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(ReceivePolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(BedroomLightCertificate)
+
+  BedroomLightSubscribePolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(SubscribePolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(BedroomLightCertificate)
