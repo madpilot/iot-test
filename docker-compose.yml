@@ -17,3 +17,16 @@ services:
       AWS_ACCESS_KEY_ID:
       AWS_SECRET_ACCESS_KEY:
       AWS_DEFAULT_REGION:
+
+  mosquitto-client:
+    build:
+      context: mosquitto-client/.
+      dockerfile: Dockerfile
+    image: iot-test/mosquitto-client
+    volumes:
+      - ./certificates:/certificates
+      - $HOME/.aws:/root/.aws:ro
+    environment:
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+      AWS_DEFAULT_REGION:
