@@ -7,4 +7,4 @@
 
 set -eo pipefail
 
-docker-compose run --rm infrastructure bash -c "/tools/bin/generate-csr ${@:1} ${@:2}"
+docker-compose run --rm infrastructure bash -c "/tools/bin/generate-csr ${1} ${2}"

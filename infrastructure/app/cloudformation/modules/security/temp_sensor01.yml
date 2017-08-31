@@ -1,0 +1,89 @@
+---
+Parameters:
+  TempSensor01CertificateSigningRequest:
+    Type: String
+    Description: Certificate Signing Request for the Bedroom Light
+    Default: |
+      -----BEGIN CERTIFICATE REQUEST-----
+      MIIC1jCCAb4CAQAwgZAxCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES
+      MBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u
+      czEVMBMGA1UEAwwMVGVtcFNlbnNvcjAxMSQwIgYJKoZIhvcNAQkBFhVteWxlc0Bt
+      YWRwaWxvdC5jb20uYXUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDa
+      nylq2ggA5+rxLPRcYkyHClIiWB6pOJDuEWLdmpFOFivW6VANoO4ep21/xpCF9W7J
+      LKx4eZ8r4Nq+fP/jQ/MZ71Cr80TY/rX2mVDaMDGteMQj2Sv7sSnDqpRqcJK7SKjX
+      3soetCh21v+CrF9VgVBsRCFyN6VWdy8FVRzh/I6tq8IdaVuVDFFawenDEqiYr7Of
+      mJkltSbocVTgunHCXog3sgsgrx83nzxvt21/9uAgGl/hhSleoQyi0TicezgIYJnO
+      vE2ZwplMcTzxCIKWh/p4xIUN4qdCmMMXlXwQhrpySUKRFLw8tpNuFiCI2OWHxEig
+      W8QsQSG4x15juTPh8VexAgMBAAGgADANBgkqhkiG9w0BAQsFAAOCAQEAKel86Psj
+      jem3bFUZMOXA3cQchpS6VLkcBX4YkfeWA7RhLptlA/RUJQ1DR/tX9f+J16a7pA39
+      3xrsa6qUufAq52pWJexZYsEgFGOp9shr3jadRr44DtkoaXue7n8PVwTjxkLfgsy+
+      oGnEuoHNCNBHQdAqZpthlt1NdxgC+O/dQN7QMx2XzAPWzOPai2o52Bjp45AC3nwo
+      tZixzj2Ygy5+4nedrqDDe/2KFf9sABmJnPprzfO9mbmyH/qUG2L6mO8P+vZZ0mCx
+      xw/T68NGNrhnMkDtrVhyjRJAppwnJBNSe1f6ML0rA04GlZuAcyzNYDNc8eFVnOMF
+      gkBu1Jqgig/9pA==
+      -----END CERTIFICATE REQUEST-----
+
+Resources:
+  TempSensor01PublishPolicy:
+    Type: "AWS::IoT::Policy"
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Action:
+            - "iot:Publish"
+            - "iot:UpdateThingShadow"
+            - "iot:DeleteThingShadow"
+          Resource:
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/iot-TempSensor01/shadow/update
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/iot-TempSensor01/shadow/delete
+
+  TempSensor01SubscribePolicy:
+    Type: "AWS::IoT::Policy"
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Action:
+            - "iot:Subscribe"
+            - "iot:Receive"
+            - "iot:GetThingShadow"
+          Resource:
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/update/accepted
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/update/rejected
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/update/delta
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/delete/accepted
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/delete/rejected
+
+
+  TempSensor01Certificate:
+    Type: "AWS::IoT::Certificate"
+    Properties:
+      CertificateSigningRequest: $(TempSensor01CertificateSigningRequest)
+      Status: ACTIVE
+
+  TempSensor01CertificateAttach:
+    Type: "AWS::IoT::ThingPrincipalAttachment"
+    Properties:
+      ThingName: $(TempSensor01)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(TempSensor01Certificate)
+
+  TempSensor01ConnectPolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(ConnectPolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(TempSensor01Certificate)
+
+  TempSensor01PublishPolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(TempSensor01PublishPolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(TempSensor01Certificate)
+
+  TempSensor01SubscribePolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(TempSensor01SubscribePolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(TempSensor01Certificate)

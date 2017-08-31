@@ -1,0 +1,5 @@
+Resources:
+  TempSensor01:
+    Type: "AWS::IoT::Thing"
+    Properties:
+      ThingName: $(AWS::StackName)-TempSensor01

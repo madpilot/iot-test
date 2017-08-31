@@ -61,20 +61,196 @@
         }
       }
     },
-    "BedroomLightCertificate": {
+    "TempSensor01PublishPolicy": {
+      "Type": "AWS::IoT::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": {
+            "Effect": "Allow",
+            "Action": [
+              "iot:Publish",
+              "iot:UpdateThingShadow",
+              "iot:DeleteThingShadow"
+            ],
+            "Resource": [
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topic/$aws/things/iot-TempSensor01/shadow/update"
+                  ]
+                ]
+              },
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topic/$aws/things/iot-TempSensor01/shadow/delete"
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "TempSensor01SubscribePolicy": {
+      "Type": "AWS::IoT::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": {
+            "Effect": "Allow",
+            "Action": [
+              "iot:Subscribe",
+              "iot:Receive",
+              "iot:GetThingShadow"
+            ],
+            "Resource": [
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topicfilter/$aws/things/iot-TempSensor01/shadow/update/accepted"
+                  ]
+                ]
+              },
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topicfilter/$aws/things/iot-TempSensor01/shadow/update/rejected"
+                  ]
+                ]
+              },
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topicfilter/$aws/things/iot-TempSensor01/shadow/update/delta"
+                  ]
+                ]
+              },
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topicfilter/$aws/things/iot-TempSensor01/shadow/delete/accepted"
+                  ]
+                ]
+              },
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topicfilter/$aws/things/iot-TempSensor01/shadow/delete/rejected"
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "TempSensor01Certificate": {
       "Type": "AWS::IoT::Certificate",
       "Properties": {
         "CertificateSigningRequest": {
-          "Ref": "BedroomLightCertificateSigningRequest"
+          "Ref": "TempSensor01CertificateSigningRequest"
         },
         "Status": "ACTIVE"
       }
     },
-    "BedroomLightCertificateAttach": {
+    "TempSensor01CertificateAttach": {
       "Type": "AWS::IoT::ThingPrincipalAttachment",
       "Properties": {
         "ThingName": {
-          "Ref": "BedroomLight"
+          "Ref": "TempSensor01"
         },
         "Principal": {
           "Fn::Join": [
@@ -94,14 +270,14 @@
               },
               ":cert/",
               {
-                "Ref": "BedroomLightCertificate"
+                "Ref": "TempSensor01Certificate"
               }
             ]
           ]
         }
       }
     },
-    "BedroomLightConnectPolicyAttach": {
+    "TempSensor01ConnectPolicyAttach": {
       "Type": "AWS::IoT::PolicyPrincipalAttachment",
       "Properties": {
         "PolicyName": {
@@ -125,18 +301,18 @@
               },
               ":cert/",
               {
-                "Ref": "BedroomLightCertificate"
+                "Ref": "TempSensor01Certificate"
               }
             ]
           ]
         }
       }
     },
-    "BedroomLightReceivePolicyAttach": {
+    "TempSensor01PublishPolicyAttach": {
       "Type": "AWS::IoT::PolicyPrincipalAttachment",
       "Properties": {
         "PolicyName": {
-          "Ref": "ReceivePolicy"
+          "Ref": "TempSensor01PublishPolicy"
         },
         "Principal": {
           "Fn::Join": [
@@ -156,18 +332,18 @@
               },
               ":cert/",
               {
-                "Ref": "BedroomLightCertificate"
+                "Ref": "TempSensor01Certificate"
               }
             ]
           ]
         }
       }
     },
-    "BedroomLightSubscribePolicyAttach": {
+    "TempSensor01SubscribePolicyAttach": {
       "Type": "AWS::IoT::PolicyPrincipalAttachment",
       "Properties": {
         "PolicyName": {
-          "Ref": "SubscribePolicy"
+          "Ref": "TempSensor01SubscribePolicy"
         },
         "Principal": {
           "Fn::Join": [
@@ -187,14 +363,14 @@
               },
               ":cert/",
               {
-                "Ref": "BedroomLightCertificate"
+                "Ref": "TempSensor01Certificate"
               }
             ]
           ]
         }
       }
     },
-    "BedroomLight": {
+    "TempSensor01": {
       "Type": "AWS::IoT::Thing",
       "Properties": {
         "ThingName": {
@@ -204,7 +380,7 @@
               {
                 "Ref": "AWS::StackName"
               },
-              "-BedroomLight"
+              "-TempSensor01"
             ]
           ]
         }
@@ -212,10 +388,10 @@
     }
   },
   "Parameters": {
-    "BedroomLightCertificateSigningRequest": {
+    "TempSensor01CertificateSigningRequest": {
       "Type": "String",
       "Description": "Certificate Signing Request for the Bedroom Light",
-      "Default": "-----BEGIN CERTIFICATE REQUEST-----\nMIIC1jCCAb4CAQAwgZAxCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES\nMBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u\nczEVMBMGA1UEAwwMQmVkcm9vbUxpZ2h0MSQwIgYJKoZIhvcNAQkBFhVteWxlc0Bt\nYWRwaWxvdC5jb20uYXUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDw\neXxFebXRfh14tHmZFXZe5XjmqO4CV+yrpziK4DIpyWmRusEYz3YgyuRwei1qyjQO\nYgYqnTLMlsptOy28s+MZMRcoXZXdCAC8B22+nD3SpERAYcOAkbmPV8SbcBZBWED8\nyhh0a/JXvFyeOa7cSBTgY71DoidT/8+4Kn6VYxTFFc6/ECm/MI3QwwCBu3eRNxZS\nFhscnRZLBM9EB8cwpaTlVq/+N8UNa5DuYjJ42Gis1yGlyxtP4yd7kp/75t2tdCJT\n00rNaH69KxrU6DLlSZ9B4ZDMz/4W5uWBvXBnaNGFS+PBt6xbeI6Unxfa9x6d0E0N\nYmy7/nyKWDsQ9S8m8NsJAgMBAAGgADANBgkqhkiG9w0BAQsFAAOCAQEArICB5c9V\n4yxc12HEP0rxE80puFhYVwpSBgynY6gWww2DMpFtnSTXR/C001UEATQb2UVNpbPt\nXUaXCqIB8zYy54QyVy2OtoV0/qvMQ8Bcs/nIC4/awv+gJHZoPL8LNBz3UhZbh01x\n5pX3q3GVVgVuPtOFOkmr9kIJfLaYEe93kDLJbLny3X0Yzmy3W23lTBtb4IZnydqA\nTT2i1m2FrUwr7DUB5UlsqxMlYx5ekr0qkrMLH8r5QpaijoQ1FG+/DtOA8Kq9Yyg8\nnqZZctFk9U/RKmH2EQh32Vp/zFz/+eRKVCHcdeVuIxEhOD3Y/pbrRr4z/0XZvDSI\nV3nGu12vq2teyA==\n-----END CERTIFICATE REQUEST-----\n"
+      "Default": "-----BEGIN CERTIFICATE REQUEST-----\nMIIC1jCCAb4CAQAwgZAxCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES\nMBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u\nczEVMBMGA1UEAwwMVGVtcFNlbnNvcjAxMSQwIgYJKoZIhvcNAQkBFhVteWxlc0Bt\nYWRwaWxvdC5jb20uYXUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDa\nnylq2ggA5+rxLPRcYkyHClIiWB6pOJDuEWLdmpFOFivW6VANoO4ep21/xpCF9W7J\nLKx4eZ8r4Nq+fP/jQ/MZ71Cr80TY/rX2mVDaMDGteMQj2Sv7sSnDqpRqcJK7SKjX\n3soetCh21v+CrF9VgVBsRCFyN6VWdy8FVRzh/I6tq8IdaVuVDFFawenDEqiYr7Of\nmJkltSbocVTgunHCXog3sgsgrx83nzxvt21/9uAgGl/hhSleoQyi0TicezgIYJnO\nvE2ZwplMcTzxCIKWh/p4xIUN4qdCmMMXlXwQhrpySUKRFLw8tpNuFiCI2OWHxEig\nW8QsQSG4x15juTPh8VexAgMBAAGgADANBgkqhkiG9w0BAQsFAAOCAQEAKel86Psj\njem3bFUZMOXA3cQchpS6VLkcBX4YkfeWA7RhLptlA/RUJQ1DR/tX9f+J16a7pA39\n3xrsa6qUufAq52pWJexZYsEgFGOp9shr3jadRr44DtkoaXue7n8PVwTjxkLfgsy+\noGnEuoHNCNBHQdAqZpthlt1NdxgC+O/dQN7QMx2XzAPWzOPai2o52Bjp45AC3nwo\ntZixzj2Ygy5+4nedrqDDe/2KFf9sABmJnPprzfO9mbmyH/qUG2L6mO8P+vZZ0mCx\nxw/T68NGNrhnMkDtrVhyjRJAppwnJBNSe1f6ML0rA04GlZuAcyzNYDNc8eFVnOMF\ngkBu1Jqgig/9pA==\n-----END CERTIFICATE REQUEST-----\n"
     }
   }
 }
