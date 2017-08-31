@@ -2,9 +2,11 @@
 
 set -eo pipefail
 
-THING_NAME="${1:?"You need to specify a thing name"}"
-KEY_FILE=/certificates/${THING_NAME}.key.pem
-CSR_FILE=/certificates/${THING_NAME}.csr.pem
+STACK_NAME="${1:?"You need to specify the stack name"}"
+THING_NAME="${2:?"You need to specify a thing name"}"
+
+KEY_FILE=/certificates/${STACK_NAME}-${THING_NAME}.key.pem
+CSR_FILE=/certificates/${STACK_NAME}-${THING_NAME}.csr.pem
 
 echo "Generating a certificate key"
 openssl genrsa -out ${KEY_FILE} 2048

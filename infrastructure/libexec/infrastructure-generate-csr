@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Generate csr for a thing
+# Usage: infrastructure generate-crs [stack] [thing]
+#
+# Example:
+#   infrastructure generate-csr iot BedroomLamp
+
+set -eo pipefail
+
+docker-compose run --rm infrastructure bash -c "/tools/bin/generate-csr ${@:1} ${@:2}"
