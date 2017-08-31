@@ -1,0 +1,18 @@
+Resources:
+  ConnectPolicy:
+    Type: "AWS::IoT::Policy"
+    Properties:
+      PolicyName: IotConnect
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Action:
+            - "iot:Connect"
+          Resource:
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):$(AWS::StackName):thing/BabysRoomLight
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):$(AWS::StackName):thing/BedroomLamp
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):$(AWS::StackName):thing/GarageDoor
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):$(AWS::StackName):thing/CoffeeMachine
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):$(AWS::StackName):thing/BedroomLight
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):$(AWS::StackName):thing/LougeRoomLight

@@ -1,0 +1,15 @@
+Resources:
+  PublishPolicy:
+    Type: "AWS::IoT::Policy"
+    Properties:
+      PolicyName: IotPublish
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Action:
+            - "iot:Publish"
+          Resource:
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):$(AWS::StackName):thing/GarageDoor
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):$(AWS::StackName):thing/CoffeeMachine
+
