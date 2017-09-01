@@ -3,9 +3,8 @@ defmodule App.Mixfile do
 
   def project do
     [app: :temperature_sensor,
-     version: "0.1.0",
+     version: "0.0.1",
      elixir: "~> 1.4",
-     elixirc_paths: elixirc_paths(Mix.env),
      compilers: Mix.compilers,
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -17,8 +16,9 @@ defmodule App.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger]]
+    [mod: {TemperatureSensor, []},
+    applications: [:logger],
+    preferred_cli_env: [espec: :test]]
   end
 
   # Dependencies can be Hex packages:
@@ -34,7 +34,8 @@ defmodule App.Mixfile do
     [
       {:apex, "~>1.0.0", only: [:dev,:test]},
       {:espec, "~> 1.4.5", only: :test},
-      [{:hulaaki, "~> 0.1.0"} ]
+      {:hulaaki, "~> 0.1.0"},
+      {:poison, "~> 3.1"}
     ]
   end
 end

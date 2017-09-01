@@ -8,6 +8,8 @@ RUN mkdir -p /app/deps
 WORKDIR /app/
 COPY . /app/
 
+RUN mkdir /certificates/
+
 COPY tini-static /sbin/tini-static
 ENTRYPOINT ["/sbin/tini-static", "--"]
 CMD ["mix", "run", "--no-halt"]
