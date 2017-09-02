@@ -9,16 +9,16 @@ iot = Aws::IoT::Client.new(region: AWS_REGION)
 thing_name = "#{ARGV[0]}-#{ARGV[1]}"
 
 # Find the certificate that belongs to the thing
-puts "Fetching #{thing_name}'s principals"
+puts "Fetching #{thing_name}'s certificates"
 arns = iot.list_thing_principals(thing_name: thing_name).principals
 
 if arns.length == 1
-  puts "Found a principal. Saving the PEM."
+  puts "Found a certificate. Saving the PEM."
 elsif arns.length == 0
-  puts "No princials found."
+  puts "No certificates found."
   exit(1)
 else
-  puts "Found #{arns.size}. Saving the last one."
+  puts "Found #{arns.size} certificates. Saving the last one."
 end
 
 # Note - this only supports one certificate. If there is multiple, it use the last one
