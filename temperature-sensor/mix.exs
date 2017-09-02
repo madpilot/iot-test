@@ -17,7 +17,7 @@ defmodule App.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [mod: {TemperatureSensor, []},
-    applications: [:logger],
+    applications: [:logger, :httpoison],
     preferred_cli_env: [espec: :test]]
   end
 
@@ -35,6 +35,7 @@ defmodule App.Mixfile do
       {:apex, "~>1.0.0", only: [:dev,:test]},
       {:espec, "~> 1.4.5", only: :test},
       {:hulaaki, "~> 0.1.0"},
+      {:httpoison, "~> 0.13"},
       {:poison, "~> 3.1"}
     ]
   end

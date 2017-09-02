@@ -6,21 +6,16 @@ defmodule TemperatureSensor do
   def start(_type, _args) do
     import Supervisor.Spec
 
+    {:ok, mqtt_config} = Application.fetch_env(:temperature_sensor, :mqtt)
+    {:ok, period} = Application.fetch_env(:temperature_sensor, :period)
+
     children = [
-      worker(MQTT.Client, [
-        [
-          client_id: "tempsensor01",
-          host: "a1sjiazdf7qxjd.iot.ap-southeast-2.amazonaws.com",
-          port: 8883,
-          timeout: 5000,
-          ssl: [cacertfile: "/certificates/root-CA.cert.pem", certfile: "/certificates/iot-TempSensor01.cert.pem", keyfile: "/certificates/iot-TempSensor01.key.pem"]]
-      ])
+      worker(MQTT.Client, [mqtt_config]),
+      worker(Battery.Discharge, []),
+      worker(TemperatureSensor.Scheduler, [period]) # Take a reading once a minute
     ]
 
     opts = [strategy: :one_for_one, name: TemperatureSensor.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
-
-
-#MQTT.Client.publish("$aws/things/iot-TempSensor01/shadow/update", %{reported: %{temperature: 17, battery: 34}})
