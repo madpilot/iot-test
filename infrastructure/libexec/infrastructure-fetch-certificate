@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Provide infrastructure completions
+# Usage: infrastructure fetch-certificates [stack] [thing]
+# Summary: Fetch auto-generated certificate for a thing
+#
+# Example:
+#   infrastructure fetch-certificate iot BedroomLamp
+
+set -eo pipefail
+
+docker-compose run --rm infrastructure bash -c "/tools/bin/fetch-certificate ${1} ${2}"
