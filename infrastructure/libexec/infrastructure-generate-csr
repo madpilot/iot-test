@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Generate csr for a thing
-# Usage: infrastructure generate-crs [stack] [thing]
+# Provide infrastructure completions
+# Usage: infrastructure generate-csr [stack] [thing]
+# Summary: Generate csr for a thing
 #
 # Example:
 #   infrastructure generate-csr iot BedroomLamp
