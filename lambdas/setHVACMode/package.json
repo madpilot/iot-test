@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage",
-    "build": "zip src/* build/dist.zip"
+    "build": "zip -r build/dist.zip src/*"
   },
   "repository": {
     "type": "git",

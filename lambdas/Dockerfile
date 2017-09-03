@@ -9,4 +9,3 @@ WORKDIR /lambdas/
 COPY . /lambdas/
 
 ENTRYPOINT ["/sbin/tini-static", "--"]
-CMD ["yarn", "run", "build"]
