@@ -61,6 +61,335 @@
         }
       }
     },
+    "HVACPublishPolicy": {
+      "Type": "AWS::IoT::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": {
+            "Effect": "Allow",
+            "Action": [
+              "iot:Publish",
+              "iot:UpdateThingShadow",
+              "iot:DeleteThingShadow"
+            ],
+            "Resource": [
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topic/$aws/things/iot-HVAC/shadow/update"
+                  ]
+                ]
+              },
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topic/$aws/things/iot-HVAC/shadow/delete"
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "HVACSubscribePolicy": {
+      "Type": "AWS::IoT::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": {
+            "Effect": "Allow",
+            "Action": [
+              "iot:Subscribe",
+              "iot:Receive",
+              "iot:GetThingShadow"
+            ],
+            "Resource": [
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topicfilter/$aws/things/iot-HVAC/shadow/update"
+                  ]
+                ]
+              },
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topicfilter/$aws/things/iot-HVAC/shadow/delete"
+                  ]
+                ]
+              },
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topicfilter/$aws/things/iot-HVAC/shadow/update/accepted"
+                  ]
+                ]
+              },
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topicfilter/$aws/things/iot-HVAC/shadow/update/rejected"
+                  ]
+                ]
+              },
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topicfilter/$aws/things/iot-HVAC/shadow/delete/accepted"
+                  ]
+                ]
+              },
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topicfilter/$aws/things/iot-HVAC/shadow/delete/rejected"
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "HVACCertificate": {
+      "Type": "AWS::IoT::Certificate",
+      "Properties": {
+        "CertificateSigningRequest": {
+          "Ref": "HVACCertificateSigningRequest"
+        },
+        "Status": "ACTIVE"
+      }
+    },
+    "HVACCertificateAttach": {
+      "Type": "AWS::IoT::ThingPrincipalAttachment",
+      "Properties": {
+        "ThingName": {
+          "Ref": "HVAC"
+        },
+        "Principal": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iot:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":cert/",
+              {
+                "Ref": "HVACCertificate"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "HVACConnectPolicyAttach": {
+      "Type": "AWS::IoT::PolicyPrincipalAttachment",
+      "Properties": {
+        "PolicyName": {
+          "Ref": "ConnectPolicy"
+        },
+        "Principal": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iot:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":cert/",
+              {
+                "Ref": "HVACCertificate"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "HVACPublishPolicyAttach": {
+      "Type": "AWS::IoT::PolicyPrincipalAttachment",
+      "Properties": {
+        "PolicyName": {
+          "Ref": "HVACPublishPolicy"
+        },
+        "Principal": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iot:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":cert/",
+              {
+                "Ref": "HVACCertificate"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "HVACSubscribePolicyAttach": {
+      "Type": "AWS::IoT::PolicyPrincipalAttachment",
+      "Properties": {
+        "PolicyName": {
+          "Ref": "HVACSubscribePolicy"
+        },
+        "Principal": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iot:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":cert/",
+              {
+                "Ref": "HVACCertificate"
+              }
+            ]
+          ]
+        }
+      }
+    },
     "TempSensor01PublishPolicy": {
       "Type": "AWS::IoT::Policy",
       "Properties": {
@@ -350,6 +679,22 @@
         }
       }
     },
+    "HVAC": {
+      "Type": "AWS::IoT::Thing",
+      "Properties": {
+        "ThingName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-HVAC"
+            ]
+          ]
+        }
+      }
+    },
     "TempSensor01": {
       "Type": "AWS::IoT::Thing",
       "Properties": {
@@ -368,6 +713,11 @@
     }
   },
   "Parameters": {
+    "HVACCertificateSigningRequest": {
+      "Type": "String",
+      "Description": "Certificate Signing Request for the Bedroom Light",
+      "Default": "-----BEGIN CERTIFICATE REQUEST-----\nMIICzjCCAbYCAQAwgYgxCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES\nMBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u\nczENMAsGA1UEAwwESFZBQzEkMCIGCSqGSIb3DQEJARYVbXlsZXNAbWFkcGlsb3Qu\nY29tLmF1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq3ezE4ezToe3\nES/zVPJ6xSeqVV5OpeM2muuwJUcdJs+pUoA3GIYIL9ofA57ZVbDillqVT8EmWqa7\ndFMUFJ2xymN1V/tfdwAjzOIOfp/wZKujb2V1YaCxB/QuiSKZvbEA6tZGtouI4Szi\nplwAeDbsJyK2+odQzAQIotEMJ2Ut+QnyzInE9+vCt8hoFZqW/immDbUiJWUFc1k1\n+lmEUP6dHRWX75qnwx08i7Cmg+KMga/W+edNizt31CrLNq5A5XMSlRCnQziiQyj6\n6dHqEMlQFtDiC8Pnwcs1M7gOdX+T/VATFUrzwMucMz1rRrX3ozm48zJIQGpLyB4k\njsMv/PMldQIDAQABoAAwDQYJKoZIhvcNAQELBQADggEBAGZHNizQjRFiZuPNs3vT\nGONvKoa08XTQ7Qdi0XDtpimTAkAFJhgGELVFYpK0N/jnf9eOcgXHi2NTjWs6SjeZ\nC3TqvfcsB2QKfxFFTA6h/5YbSpCgEvl+y8OaCqgW63qKqBmL+SgzLTEd68IRraOp\niVUATtSMOkfQviIRMdGpmq/HygWzGN26gGHWNs74dqz7IzNeDhp/Yr3dnxxYq/8L\nRClxVInX93/v8UYoiaB1b3ntDVGkRKIKgz6Kgyzr1PNEmXZOiTCWxs1XPNpJwrWv\nF7DZrN1gmFLK3B3Ou+kCa+T63tPSDzxidE/G0G25KyQf2JcQ0EDMDpmWyKhBP7mL\n4IM=\n-----END CERTIFICATE REQUEST-----\n"
+    },
     "TempSensor01CertificateSigningRequest": {
       "Type": "String",
       "Description": "Certificate Signing Request for the Bedroom Light",
