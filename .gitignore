@@ -1,3 +1,4 @@
 /certificates/*
 !/certificates/.keep
 !/certificates/**/.keep
+node_modules
