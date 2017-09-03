@@ -10,4 +10,4 @@ set -eo pipefail
 
 lambda=$1
 shift
-docker-compose run --rm -w /lambdas/${lambda} lambdas bash -c "yarn $@"
+docker-compose run --rm -w /lambdas/${lambda} lambdas bash -c "yarn $*"

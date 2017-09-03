@@ -10,6 +10,7 @@ services:
     volumes:
       - ./infrastructure:/tools/
       - ./certificates:/certificates
+      - ./lambdas:/lambdas
       - $HOME/.aws:/root/.aws:ro
     tmpfs:
       - /tmp

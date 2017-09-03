@@ -1,5 +1,5 @@
 const setHVACMode = require("./index").setHVACMode;
-const TARGET = require("./index.js").TARGET
+const TARGET = require("./index.js").TARGET;
 
 describe("setHVACMode", () => {
   let temperature, iotInstance;
@@ -11,7 +11,7 @@ describe("setHVACMode", () => {
   let payloadMatcher = (expected) => {
     return sinon.match((value) => {
       let ret = true;
-      let payload = JSON.parse(value.payload.toString()).state.requested;
+      let payload = JSON.parse(value.payload).state.requested;
 
       for(let key in expected) {
         ret = ret && payload[key] == expected[key];

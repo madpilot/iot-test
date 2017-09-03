@@ -1,4 +1,5 @@
 "use strict";
+global.AWS = require("aws-sdk");
 
 const TARGET = 20;
 const MIN = TARGET - 5;
@@ -46,12 +47,11 @@ function calcMode(message, temperature) {
 function sendUpdate(message, callback) {
   let data = new AWS.IotData({endpoint: ENDPOINT});
   let params = {
-    topic: TOPIC,
-    payload: new Buffer(JSON.stringify(message)),
-    qos: 0
+    thingName: "iot-HVAC",
+    payload: JSON.stringify(message)
   };
 
-  data.publish(params, callback);
+  data.updateThingShadow(params, callback);
 }
 
 function setHVACMode(event, context, callback) {
@@ -63,16 +63,15 @@ function setHVACMode(event, context, callback) {
 
   let state = {
     state: {
-      requested: message
+      reported: message
     }
   }
 
   sendUpdate(state, function(error, data) {
     if (error) {
-      console.log(error, error.stack);
+      callback(error);
     } else {
-      console.log("New HVAC state requested: " + JSON.stringify(state));
-      context.succeed();
+      callback(null, "New HVAC state requested: " + JSON.stringify(state));
     }
   });
 }

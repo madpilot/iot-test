@@ -21,6 +21,7 @@ WORKDIR /tools/
 COPY . /tools/
 
 RUN mkdir /certificates/
+RUN mkdir /lambdas/
 
 RUN npm install -g cirrus
 RUN bundle install --clean --system
