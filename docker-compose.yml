@@ -32,14 +32,6 @@ services:
       AWS_SECRET_ACCESS_KEY:
       AWS_DEFAULT_REGION:
 
-  lambdas:
-    build:
-      context: lambdas/.
-      dockerfile: Dockerfile
-    image: iot-test/lambdas
-    volumes:
-      - ./lambdas:/lambdas
-
   temperature-sensor:
     build:
       context: temperature-sensor/.
