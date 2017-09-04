@@ -1,0 +1,33 @@
+Resources:
+  TempSensor01SetHVACMode:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - iot.amazonaws.com
+          Action: sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: TempSensor01SetHVACMode
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action: "lambda:InvokeFunction"
+            Resource: arn:$(AWS::Partition):lambda:$(AWS::Region):$(AWS::AccountId):function/$(SetHVACMode)
+
+  TempSensor01SetHVACModeRule:
+    Type: "AWS::IoT::TopicRule"
+    Properties:
+      TopicRulePayload:
+        Description: "Works out if the HVAC needs to be turned on or off"
+        Sql: SELECT temperature AS temperature FROM '\$aws/things/iot-TempSensor01/shadow/update/accepted'
+        RuleDisabled: false
+        AwsIotSqlVersion: "2016-03-23"
+        Actions:
+        - Lambda:
+            FunctionArn: arn:$(AWS::Partition):lambda:$(AWS::Region):$(AWS::AccountId):function/$(SetHVACMode)

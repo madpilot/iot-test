@@ -21,14 +21,44 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": "root",
+            "PolicyName": "SetHVACModeExecutionRole",
             "PolicyDocument": {
               "Version": "2012-10-17",
               "Statement": [
                 {
                   "Effect": "Allow",
                   "Action": "logs:*",
-                  "Resource": "arn:aws:logs:*:*:*"
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":logs:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":",
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        ":*:*"
+                      ]
+                    ]
+                  }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "sns:ListSubscriptionsByTopic",
+                    "sns:CreateTopic",
+                    "sns:SetTopicAttributes",
+                    "sns:Subscribe",
+                    "sns:Publish"
+                  ],
+                  "Resource": "*"
                 },
                 {
                   "Effect": "Allow",
@@ -73,7 +103,11 @@
           "Fn::Join": [
             "",
             [
-              "arn:aws:iam::",
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iam::",
               {
                 "Ref": "AWS::AccountId"
               },
@@ -85,30 +119,11 @@
           ]
         },
         "Runtime": "nodejs6.10",
-        "Timeout": 90,
+        "Timeout": 3,
         "Environment": {
           "Variables": {
             "ENDPOINT": "a1sjiazdf7qxjd.iot.ap-southeast-2.amazonaws.com",
-            "TOPIC": {
-              "Fn::Join": [
-                "",
-                [
-                  "arn:",
-                  {
-                    "Ref": "AWS::Partition"
-                  },
-                  ":iot:",
-                  {
-                    "Ref": "AWS::Region"
-                  },
-                  ":",
-                  {
-                    "Ref": "AWS::AccountId"
-                  },
-                  ":topic/$aws/things/iot-HVAC/shadow/update"
-                ]
-              ]
-            }
+            "THING_NAME": "iot-HVAC"
           }
         }
       }
@@ -173,7 +188,7 @@
         }
       }
     },
-    "LambdaExecutionRole": {
+    "TempSensor01SetHVACMode": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "AssumeRolePolicyDocument": {
@@ -183,7 +198,7 @@
               "Effect": "Allow",
               "Principal": {
                 "Service": [
-                  "lambda.amazonaws.com"
+                  "iot.amazonaws.com"
                 ]
               },
               "Action": "sts:AssumeRole"
@@ -193,19 +208,112 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": "root",
+            "PolicyName": "TempSensor01SetHVACMode",
             "PolicyDocument": {
               "Version": "2012-10-17",
               "Statement": [
                 {
                   "Effect": "Allow",
-                  "Action": "logs:*",
-                  "Resource": "arn:aws:logs:*:*:*"
+                  "Action": "lambda:InvokeFunction",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":lambda:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":",
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        ":function/",
+                        {
+                          "Ref": "SetHVACMode"
+                        }
+                      ]
+                    ]
+                  },
+                  "FunctionName": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":lambda:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":",
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        ":function/",
+                        {
+                          "Ref": "SetHVACMode"
+                        }
+                      ]
+                    ]
+                  },
+                  "Principal": "iot.amazonaws.com",
+                  "SourceAccount": {
+                    "Ref": "AWS::AccountId"
+                  },
+                  "SourceArn": {
+                    "Ref": "TempSensor01SetHVACModeRule"
+                  },
+                  "Type": "AWS::Lambda::Permission"
                 }
               ]
             }
           }
         ]
+      }
+    },
+    "TempSensor01SetHVACModeRule": {
+      "Type": "AWS::IoT::TopicRule",
+      "Properties": {
+        "TopicRulePayload": {
+          "Description": "Works out if the HVAC needs to be turned on or off",
+          "Sql": "SELECT temperature AS temperature FROM '$aws/things/iot-TempSensor01/shadow/update/accepted'",
+          "RuleDisabled": "false",
+          "AwsIotSqlVersion": "2016-03-23",
+          "Actions": [
+            {
+              "Lambda": {
+                "FunctionArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":lambda:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":function/",
+                      {
+                        "Ref": "SetHVACMode"
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        }
       }
     },
     "HVACPublishPolicy": {

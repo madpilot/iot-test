@@ -12,13 +12,21 @@ Resources:
           Action: sts:AssumeRole
       Path: "/"
       Policies:
-      - PolicyName: root
+      - PolicyName: SetHVACModeExecutionRole
         PolicyDocument:
           Version: '2012-10-17'
           Statement:
           - Effect: Allow
             Action: "logs:*"
-            Resource: arn:aws:logs:*:*:*
+            Resource: arn:$(AWS::Partition):logs:$(AWS::Region):$(AWS::AccountId):*:*
+          - Effect: Allow
+            Action:
+            - "sns:ListSubscriptionsByTopic"
+            - "sns:CreateTopic"
+            - "sns:SetTopicAttributes"
+            - "sns:Subscribe"
+            - "sns:Publish"
+            Resource: "*"
           - Effect: Allow
             Action: "iot:UpdateThingShadow"
             Resource: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):thing/iot-HVAC
@@ -31,10 +39,10 @@ Resources:
       Description: Sets the HVAC mode, and turns on the fan when required
       Handler: index.setHVACMode
       MemorySize: 128
-      Role: arn:aws:iam::$(AWS::AccountId):role/$(SetHVACModeExecutionRole)
+      Role: arn:$(AWS::Partition):iam::$(AWS::AccountId):role/$(SetHVACModeExecutionRole)
       Runtime: nodejs6.10
-      Timeout: 90
+      Timeout: 3
       Environment:
         Variables:
           ENDPOINT: a1sjiazdf7qxjd.iot.ap-southeast-2.amazonaws.com
-          TOPIC: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/iot-HVAC/shadow/update
+          THING_NAME: iot-HVAC
