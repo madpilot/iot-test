@@ -2,7 +2,7 @@
 Parameters:
   HVACCertificateSigningRequest:
     Type: String
-    Description: Certificate Signing Request for the Bedroom Light
+    Description: Certificate Signing Request for the HVAC
     Default: |
       -----BEGIN CERTIFICATE REQUEST-----
       MIICzjCCAbYCAQAwgYgxCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES

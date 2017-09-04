@@ -1,133 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Resources": {
-    "SetHVACModeExecutionRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "lambda.amazonaws.com"
-                ]
-              },
-              "Action": "sts:AssumeRole"
-            }
-          ]
-        },
-        "Path": "/",
-        "Policies": [
-          {
-            "PolicyName": "SetHVACModeExecutionRole",
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": "logs:*",
-                  "Resource": {
-                    "Fn::Join": [
-                      "",
-                      [
-                        "arn:",
-                        {
-                          "Ref": "AWS::Partition"
-                        },
-                        ":logs:",
-                        {
-                          "Ref": "AWS::Region"
-                        },
-                        ":",
-                        {
-                          "Ref": "AWS::AccountId"
-                        },
-                        ":*:*"
-                      ]
-                    ]
-                  }
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "sns:ListSubscriptionsByTopic",
-                    "sns:CreateTopic",
-                    "sns:SetTopicAttributes",
-                    "sns:Subscribe",
-                    "sns:Publish"
-                  ],
-                  "Resource": "*"
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": "iot:UpdateThingShadow",
-                  "Resource": {
-                    "Fn::Join": [
-                      "",
-                      [
-                        "arn:",
-                        {
-                          "Ref": "AWS::Partition"
-                        },
-                        ":iot:",
-                        {
-                          "Ref": "AWS::Region"
-                        },
-                        ":",
-                        {
-                          "Ref": "AWS::AccountId"
-                        },
-                        ":thing/iot-HVAC"
-                      ]
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    "SetHVACMode": {
-      "Type": "AWS::Lambda::Function",
-      "Properties": {
-        "Code": {
-          "ZipFile": "/lambdas/setHVACMode/build/dist.zip"
-        },
-        "Description": "Sets the HVAC mode, and turns on the fan when required",
-        "Handler": "index.setHVACMode",
-        "MemorySize": 128,
-        "Role": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iam::",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":role/",
-              {
-                "Ref": "SetHVACModeExecutionRole"
-              }
-            ]
-          ]
-        },
-        "Runtime": "nodejs6.10",
-        "Timeout": 3,
-        "Environment": {
-          "Variables": {
-            "ENDPOINT": "a1sjiazdf7qxjd.iot.ap-southeast-2.amazonaws.com",
-            "THING_NAME": "iot-HVAC"
-          }
-        }
-      }
-    },
     "ConnectPolicy": {
       "Type": "AWS::IoT::Policy",
       "Properties": {
@@ -188,130 +61,211 @@
         }
       }
     },
-    "TempSensor01SetHVACMode": {
-      "Type": "AWS::IAM::Role",
+    "ControllerPublishPolicy": {
+      "Type": "AWS::IoT::Policy",
       "Properties": {
-        "AssumeRolePolicyDocument": {
+        "PolicyDocument": {
           "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "iot.amazonaws.com"
+          "Statement": {
+            "Effect": "Allow",
+            "Action": [
+              "iot:Publish",
+              "iot:UpdateThingShadow",
+              "iot:DeleteThingShadow"
+            ],
+            "Resource": [
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topic/$aws/things/+/shadow/update"
+                  ]
                 ]
-              },
-              "Action": "sts:AssumeRole"
-            }
-          ]
-        },
-        "Path": "/",
-        "Policies": [
-          {
-            "PolicyName": "TempSensor01SetHVACMode",
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": "lambda:InvokeFunction",
-                  "Resource": {
-                    "Fn::Join": [
-                      "",
-                      [
-                        "arn:",
-                        {
-                          "Ref": "AWS::Partition"
-                        },
-                        ":lambda:",
-                        {
-                          "Ref": "AWS::Region"
-                        },
-                        ":",
-                        {
-                          "Ref": "AWS::AccountId"
-                        },
-                        ":function/",
-                        {
-                          "Ref": "SetHVACMode"
-                        }
-                      ]
-                    ]
-                  },
-                  "FunctionName": {
-                    "Fn::Join": [
-                      "",
-                      [
-                        "arn:",
-                        {
-                          "Ref": "AWS::Partition"
-                        },
-                        ":lambda:",
-                        {
-                          "Ref": "AWS::Region"
-                        },
-                        ":",
-                        {
-                          "Ref": "AWS::AccountId"
-                        },
-                        ":function/",
-                        {
-                          "Ref": "SetHVACMode"
-                        }
-                      ]
-                    ]
-                  },
-                  "Principal": "iot.amazonaws.com",
-                  "SourceAccount": {
-                    "Ref": "AWS::AccountId"
-                  },
-                  "SourceArn": {
-                    "Ref": "TempSensor01SetHVACModeRule"
-                  },
-                  "Type": "AWS::Lambda::Permission"
-                }
-              ]
-            }
+              }
+            ]
           }
-        ]
+        }
       }
     },
-    "TempSensor01SetHVACModeRule": {
-      "Type": "AWS::IoT::TopicRule",
+    "ControllerSubscribePolicy": {
+      "Type": "AWS::IoT::Policy",
       "Properties": {
-        "TopicRulePayload": {
-          "Description": "Works out if the HVAC needs to be turned on or off",
-          "Sql": "SELECT temperature AS temperature FROM '$aws/things/iot-TempSensor01/shadow/update/accepted'",
-          "RuleDisabled": "false",
-          "AwsIotSqlVersion": "2016-03-23",
-          "Actions": [
-            {
-              "Lambda": {
-                "FunctionArn": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition"
-                      },
-                      ":lambda:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":function/",
-                      {
-                        "Ref": "SetHVACMode"
-                      }
-                    ]
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": {
+            "Effect": "Allow",
+            "Action": [
+              "iot:Subscribe",
+              "iot:Receive",
+              "iot:GetThingShadow"
+            ],
+            "Resource": [
+              {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":iot:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topicfilter/$aws/things/+/shadow/update/accepted"
                   ]
-                }
+                ]
               }
-            }
+            ]
+          }
+        }
+      }
+    },
+    "ControllerCertificate": {
+      "Type": "AWS::IoT::Certificate",
+      "Properties": {
+        "CertificateSigningRequest": {
+          "Ref": "ControllerCertificateSigningRequest"
+        },
+        "Status": "ACTIVE"
+      }
+    },
+    "ControllerCertificateAttach": {
+      "Type": "AWS::IoT::ThingPrincipalAttachment",
+      "Properties": {
+        "ThingName": {
+          "Ref": "Controller"
+        },
+        "Principal": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iot:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":cert/",
+              {
+                "Ref": "ControllerCertificate"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "ControllerConnectPolicyAttach": {
+      "Type": "AWS::IoT::PolicyPrincipalAttachment",
+      "Properties": {
+        "PolicyName": {
+          "Ref": "ConnectPolicy"
+        },
+        "Principal": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iot:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":cert/",
+              {
+                "Ref": "ControllerCertificate"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "ControllerPublishPolicyAttach": {
+      "Type": "AWS::IoT::PolicyPrincipalAttachment",
+      "Properties": {
+        "PolicyName": {
+          "Ref": "ControllerPublishPolicy"
+        },
+        "Principal": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iot:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":cert/",
+              {
+                "Ref": "ControllerCertificate"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "ControllerSubscribePolicyAttach": {
+      "Type": "AWS::IoT::PolicyPrincipalAttachment",
+      "Properties": {
+        "PolicyName": {
+          "Ref": "ControllerSubscribePolicy"
+        },
+        "Principal": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iot:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":cert/",
+              {
+                "Ref": "ControllerCertificate"
+              }
+            ]
           ]
         }
       }
@@ -934,6 +888,22 @@
         }
       }
     },
+    "Controller": {
+      "Type": "AWS::IoT::Thing",
+      "Properties": {
+        "ThingName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-Controller"
+            ]
+          ]
+        }
+      }
+    },
     "HVAC": {
       "Type": "AWS::IoT::Thing",
       "Properties": {
@@ -968,14 +938,19 @@
     }
   },
   "Parameters": {
+    "ControllerCertificateSigningRequest": {
+      "Type": "String",
+      "Description": "Certificate Signing Request for the Controller",
+      "Default": "-----BEGIN CERTIFICATE REQUEST-----\nMIIC1DCCAbwCAQAwgY4xCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES\nMBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u\nczETMBEGA1UEAwwKQ29udHJvbGxlcjEkMCIGCSqGSIb3DQEJARYVbXlsZXNAbWFk\ncGlsb3QuY29tLmF1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4kFn\nAp0MSCc7uaN+wYkII3kX3apkXWTmVlyS3+MF7PhwJozXJ1EXc4TMAdh6CTM4yaNb\nRMH0r5xvDfS0OBZyEIOg1WQXK9n7ZUWtXB/IP/FqsD0SMULxLBcin1+MVgYck5Cv\n45tdfk4K9EDXhhL5rqTKe5dDZ9WLxCmtDiGeOvA3tTPKIpe4qbeLypUen5y68y4O\nZQmrZolrUS2/PsTn6ogx5dGrOmgkE7U2KDoetM++T3WeZqCZSPgu018eMUrJmuIg\nbuXC1HjMz8hxd2XVtI6nbwSQLxctaYPA/rxwlB7GE034IYLhMBNY15Cngt1NwgMB\nfGQEyBDWSNnxKHDzRwIDAQABoAAwDQYJKoZIhvcNAQELBQADggEBAF2BkjgyaYS4\nFlriK7LJDNfqBTtaUXo0GiZHRHI/xHNBdKjC7ET4BZyZydc0Z7MdAVr+ChhDOa8D\nFyO/34DxYRHbID0wju/CIkXSEst1GYxw/3DFA7qujqX2fGNSUJKldlZo0/9lmTyU\n2dDGYE31aPwAKqoXae+wpd+iyUm+is5nGtiij26YrWCk5MYRdmzIRoPxR2exdd2U\n0swprRgHG7zPThwTWtVm/Sjz/sShu0ocxSEw9r+3oEQy3g2nBnHE2HI63sohmwa6\ne6CvSHFe/EvyBC7nKcejDmie+C5JEupmns55h6zYkdWIxF96m4OwcHiJgp8RNBNX\nJ9yUFeGEMNo=\n-----END CERTIFICATE REQUEST-----\n"
+    },
     "HVACCertificateSigningRequest": {
       "Type": "String",
-      "Description": "Certificate Signing Request for the Bedroom Light",
+      "Description": "Certificate Signing Request for the HVAC",
       "Default": "-----BEGIN CERTIFICATE REQUEST-----\nMIICzjCCAbYCAQAwgYgxCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES\nMBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u\nczENMAsGA1UEAwwESFZBQzEkMCIGCSqGSIb3DQEJARYVbXlsZXNAbWFkcGlsb3Qu\nY29tLmF1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq3ezE4ezToe3\nES/zVPJ6xSeqVV5OpeM2muuwJUcdJs+pUoA3GIYIL9ofA57ZVbDillqVT8EmWqa7\ndFMUFJ2xymN1V/tfdwAjzOIOfp/wZKujb2V1YaCxB/QuiSKZvbEA6tZGtouI4Szi\nplwAeDbsJyK2+odQzAQIotEMJ2Ut+QnyzInE9+vCt8hoFZqW/immDbUiJWUFc1k1\n+lmEUP6dHRWX75qnwx08i7Cmg+KMga/W+edNizt31CrLNq5A5XMSlRCnQziiQyj6\n6dHqEMlQFtDiC8Pnwcs1M7gOdX+T/VATFUrzwMucMz1rRrX3ozm48zJIQGpLyB4k\njsMv/PMldQIDAQABoAAwDQYJKoZIhvcNAQELBQADggEBAGZHNizQjRFiZuPNs3vT\nGONvKoa08XTQ7Qdi0XDtpimTAkAFJhgGELVFYpK0N/jnf9eOcgXHi2NTjWs6SjeZ\nC3TqvfcsB2QKfxFFTA6h/5YbSpCgEvl+y8OaCqgW63qKqBmL+SgzLTEd68IRraOp\niVUATtSMOkfQviIRMdGpmq/HygWzGN26gGHWNs74dqz7IzNeDhp/Yr3dnxxYq/8L\nRClxVInX93/v8UYoiaB1b3ntDVGkRKIKgz6Kgyzr1PNEmXZOiTCWxs1XPNpJwrWv\nF7DZrN1gmFLK3B3Ou+kCa+T63tPSDzxidE/G0G25KyQf2JcQ0EDMDpmWyKhBP7mL\n4IM=\n-----END CERTIFICATE REQUEST-----\n"
     },
     "TempSensor01CertificateSigningRequest": {
       "Type": "String",
-      "Description": "Certificate Signing Request for the Bedroom Light",
+      "Description": "Certificate Signing Request for the Temperature Sensor",
       "Default": "-----BEGIN CERTIFICATE REQUEST-----\nMIIC1jCCAb4CAQAwgZAxCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES\nMBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u\nczEVMBMGA1UEAwwMVGVtcFNlbnNvcjAxMSQwIgYJKoZIhvcNAQkBFhVteWxlc0Bt\nYWRwaWxvdC5jb20uYXUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDa\nnylq2ggA5+rxLPRcYkyHClIiWB6pOJDuEWLdmpFOFivW6VANoO4ep21/xpCF9W7J\nLKx4eZ8r4Nq+fP/jQ/MZ71Cr80TY/rX2mVDaMDGteMQj2Sv7sSnDqpRqcJK7SKjX\n3soetCh21v+CrF9VgVBsRCFyN6VWdy8FVRzh/I6tq8IdaVuVDFFawenDEqiYr7Of\nmJkltSbocVTgunHCXog3sgsgrx83nzxvt21/9uAgGl/hhSleoQyi0TicezgIYJnO\nvE2ZwplMcTzxCIKWh/p4xIUN4qdCmMMXlXwQhrpySUKRFLw8tpNuFiCI2OWHxEig\nW8QsQSG4x15juTPh8VexAgMBAAGgADANBgkqhkiG9w0BAQsFAAOCAQEAKel86Psj\njem3bFUZMOXA3cQchpS6VLkcBX4YkfeWA7RhLptlA/RUJQ1DR/tX9f+J16a7pA39\n3xrsa6qUufAq52pWJexZYsEgFGOp9shr3jadRr44DtkoaXue7n8PVwTjxkLfgsy+\noGnEuoHNCNBHQdAqZpthlt1NdxgC+O/dQN7QMx2XzAPWzOPai2o52Bjp45AC3nwo\ntZixzj2Ygy5+4nedrqDDe/2KFf9sABmJnPprzfO9mbmyH/qUG2L6mO8P+vZZ0mCx\nxw/T68NGNrhnMkDtrVhyjRJAppwnJBNSe1f6ML0rA04GlZuAcyzNYDNc8eFVnOMF\ngkBu1Jqgig/9pA==\n-----END CERTIFICATE REQUEST-----\n"
     }
   }

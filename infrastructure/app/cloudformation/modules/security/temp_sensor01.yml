@@ -2,7 +2,7 @@
 Parameters:
   TempSensor01CertificateSigningRequest:
     Type: String
-    Description: Certificate Signing Request for the Bedroom Light
+    Description: Certificate Signing Request for the Temperature Sensor
     Default: |
       -----BEGIN CERTIFICATE REQUEST-----
       MIIC1jCCAb4CAQAwgZAxCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES

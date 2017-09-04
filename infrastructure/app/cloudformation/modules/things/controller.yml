@@ -1,0 +1,5 @@
+Resources:
+  Controller:
+    Type: "AWS::IoT::Thing"
+    Properties:
+      ThingName: $(AWS::StackName)-Controller

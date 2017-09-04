@@ -1,0 +1,83 @@
+---
+Parameters:
+  ControllerCertificateSigningRequest:
+    Type: String
+    Description: Certificate Signing Request for the Controller
+    Default: |
+      -----BEGIN CERTIFICATE REQUEST-----
+      MIIC1DCCAbwCAQAwgY4xCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES
+      MBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u
+      czETMBEGA1UEAwwKQ29udHJvbGxlcjEkMCIGCSqGSIb3DQEJARYVbXlsZXNAbWFk
+      cGlsb3QuY29tLmF1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4kFn
+      Ap0MSCc7uaN+wYkII3kX3apkXWTmVlyS3+MF7PhwJozXJ1EXc4TMAdh6CTM4yaNb
+      RMH0r5xvDfS0OBZyEIOg1WQXK9n7ZUWtXB/IP/FqsD0SMULxLBcin1+MVgYck5Cv
+      45tdfk4K9EDXhhL5rqTKe5dDZ9WLxCmtDiGeOvA3tTPKIpe4qbeLypUen5y68y4O
+      ZQmrZolrUS2/PsTn6ogx5dGrOmgkE7U2KDoetM++T3WeZqCZSPgu018eMUrJmuIg
+      buXC1HjMz8hxd2XVtI6nbwSQLxctaYPA/rxwlB7GE034IYLhMBNY15Cngt1NwgMB
+      fGQEyBDWSNnxKHDzRwIDAQABoAAwDQYJKoZIhvcNAQELBQADggEBAF2BkjgyaYS4
+      FlriK7LJDNfqBTtaUXo0GiZHRHI/xHNBdKjC7ET4BZyZydc0Z7MdAVr+ChhDOa8D
+      FyO/34DxYRHbID0wju/CIkXSEst1GYxw/3DFA7qujqX2fGNSUJKldlZo0/9lmTyU
+      2dDGYE31aPwAKqoXae+wpd+iyUm+is5nGtiij26YrWCk5MYRdmzIRoPxR2exdd2U
+      0swprRgHG7zPThwTWtVm/Sjz/sShu0ocxSEw9r+3oEQy3g2nBnHE2HI63sohmwa6
+      e6CvSHFe/EvyBC7nKcejDmie+C5JEupmns55h6zYkdWIxF96m4OwcHiJgp8RNBNX
+      J9yUFeGEMNo=
+      -----END CERTIFICATE REQUEST-----
+
+Resources:
+  ControllerPublishPolicy:
+    Type: "AWS::IoT::Policy"
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Action:
+            - "iot:Publish"
+            - "iot:UpdateThingShadow"
+            - "iot:DeleteThingShadow"
+          Resource:
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/+/shadow/update
+
+  ControllerSubscribePolicy:
+    Type: "AWS::IoT::Policy"
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Action:
+            - "iot:Subscribe"
+            - "iot:Receive"
+            - "iot:GetThingShadow"
+          Resource:
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/+/shadow/update/accepted
+
+  ControllerCertificate:
+    Type: "AWS::IoT::Certificate"
+    Properties:
+      CertificateSigningRequest: $(ControllerCertificateSigningRequest)
+      Status: ACTIVE
+
+  ControllerCertificateAttach:
+    Type: "AWS::IoT::ThingPrincipalAttachment"
+    Properties:
+      ThingName: $(Controller)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(ControllerCertificate)
+
+  ControllerConnectPolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(ConnectPolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(ControllerCertificate)
+
+  ControllerPublishPolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(ControllerPublishPolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(ControllerCertificate)
+
+  ControllerSubscribePolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(ControllerSubscribePolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(ControllerCertificate)
