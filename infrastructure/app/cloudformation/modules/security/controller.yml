@@ -35,12 +35,8 @@ Resources:
           Action:
             - "iot:Subscribe"
             - "iot:Receive"
-            - "iot:GetThingShadow"
-          Resource:
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/update
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/update/accepted
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/update/document
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/update/delta
+            - "iot:GetThingsShadow"
+          Resource: "*"
 
   ControllerCertificate:
     Type: "AWS::IoT::Certificate"

@@ -44,10 +44,10 @@ cd iot-test
 
 ```bash
 docker-compose build
-infrastructure/bin/infrastructure generate-csr $STACK_NAME TempSensor01
-infrastructure/bin/infrastructure generate-csr $STACK_NAME HVAC
-infrastructure/bin/infrastructure generate-csr $STACK_NAME Controller
-infrastructure/bin/infrastructure stack create $STACK_NAME
+infrastructure/bin/infrastructure generate-csr $STACKNAME TempSensor01
+infrastructure/bin/infrastructure generate-csr $STACKNAME HVAC
+infrastructure/bin/infrastructure generate-csr $STACKNAME Controller
+infrastructure/bin/infrastructure stack create $STACKNAME
 docker-compose run
 ```
 

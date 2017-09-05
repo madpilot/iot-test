@@ -2,8 +2,8 @@ defmodule TemperatureSensor.Scheduler do
   require Logger
   use GenServer
 
-  def start_link(period) do
-    GenServer.start_link(__MODULE__, %{period: period, temperature: nil, battery: nil})
+  def start_link(%{period: period, publish_topic: publish_topic}) do
+    GenServer.start_link(__MODULE__, %{period: period, publish_topic: publish_topic, temperature: nil, battery: nil})
   end
 
   def init(state) do
@@ -17,7 +17,7 @@ defmodule TemperatureSensor.Scheduler do
 
     if temperature != state[:temperature] || battery != state[:battery] do
       Logger.info("Publishing update: temperature #{temperature}, battery: #{battery}")
-      MQTT.Client.publish("$aws/things/iot-TempSensor01/shadow/update", %{state: %{reported: %{temperature: temperature, battery: battery}}})
+      MQTT.Client.publish(state[:publish_topic], %{state: %{reported: %{temperature: temperature, battery: battery}}})
     else
       Logger.info("No change. No update required")
     end

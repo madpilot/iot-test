@@ -1,0 +1,91 @@
+---
+Parameters:
+  HVACCertificateSigningRequest:
+    Type: String
+    Description: Certificate Signing Request for the Bedroom Light
+    Default: |
+      -----BEGIN CERTIFICATE REQUEST-----
+      MIICzjCCAbYCAQAwgYgxCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES
+      MBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u
+      czENMAsGA1UEAwwESFZBQzEkMCIGCSqGSIb3DQEJARYVbXlsZXNAbWFkcGlsb3Qu
+      Y29tLmF1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyChdMA/Izgad
+      o2cnSutGt/FjNItjd1PprmA9jr7L+cFb+A9AQlbmnr0j3IKLTKELLakgzTR9i8OP
+      JxsiXqHHEe8VCUFexC6DYC5OMGvbq1gUu8x1gCXC6TnHChC0VzhBCMv66cnaaJ3R
+      WiKxSYAurMAdlky88LpYHCZyVvXdIovgChoPsex2YwrBbCda7PDrfc8H8cdZC2rG
+      yB2+j1QAQ1U4PrTsA/5VsgFgZkvk3xbBVVw0t7aYNFCr0aguLhaeIAsXrzH0WBKi
+      DW2AqpZH0Z5hDqg299xw9W4XBy1nAvjc5BsTeegKOq1r6AOSDq9Bnc2ns4xdxer7
+      241A/R6zJwIDAQABoAAwDQYJKoZIhvcNAQELBQADggEBAG3HTbeFlnPTZoBShC4V
+      3yC7dAfRqFo7DHXvtmnKlT8nguOA+MqP2X7IJhqKUxkZ3nMufhD0VBsyUwRTVH+U
+      hSeviPHr72wISGAa3ftzE3371/nspum4oFeoK5nZTc3MYQMvju6n6pl7zHIcz/n4
+      Dd/OA5HEnTYonOvuBsL3ZM9SRQGiQZs6wWwG5Kn+wqdlsCWtfV+uRgx96gUZkRpN
+      XAgk0nb3dXqjHtguIZu0BODD1y6tkavjCKSj6UJue9fmpGDRv+djtdKro85HU2fM
+      aad4XUYiuz/wcpXPRllmLPcPJYJE2ibZUCq3coGHgvBg03soshUiLBc9JHMcayIZ
+      R2A=
+      -----END CERTIFICATE REQUEST-----
+
+
+
+Resources:
+  HVACPublishPolicy:
+    Type: "AWS::IoT::Policy"
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Action:
+            - "iot:Publish"
+            - "iot:UpdateThingsShadow"
+            - "iot:DeleteThingsShadow"
+          Resource:
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/iot-HVAC/shadow/update
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/iot-HVAC/shadow/delete
+
+  HVACSubscribePolicy:
+    Type: "AWS::IoT::Policy"
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Action:
+            - "iot:Subscribe"
+            - "iot:Receive"
+            - "iot:GetThingsShadow"
+          Resource:
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/update
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/delete
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/update/accepted
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/update/rejected
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/delete/accepted
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/delete/rejected
+
+  HVACCertificate:
+    Type: "AWS::IoT::Certificate"
+    Properties:
+      CertificateSigningRequest: $(HVACCertificateSigningRequest)
+      Status: ACTIVE
+
+  HVACCertificateAttach:
+    Type: "AWS::IoT::ThingPrincipalAttachment"
+    Properties:
+      ThingName: $(HVAC)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(HVACCertificate)
+
+  HVACConnectPolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(ConnectPolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(HVACCertificate)
+
+  HVACPublishPolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(HVACPublishPolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(HVACCertificate)
+
+  HVACSubscribePolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(HVACSubscribePolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(HVACCertificate)

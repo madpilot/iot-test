@@ -1,0 +1,34 @@
+{
+  "name": "setHVACMode",
+  "version": "1.0.0",
+  "description": "Set the HVAC running mode.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "build": "zip -r build/dist.zip src/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/madpilot/iot-test/lambdas"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./spec/setup.js",
+    "moduleDirectories": [
+      "node_modules"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ]
+  },
+  "author": "Myles Eftos",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "jest": "^20.0.4",
+    "sinon": "^3.2.1",
+    "sinon-chai": "^2.13.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.108.0"
+  }
+}

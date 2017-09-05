@@ -7,6 +7,8 @@ import ReplacePlugin from 'replace-bundle-webpack-plugin';
 import path from 'path';
 import fs from 'fs';
 const ENV = process.env.NODE_ENV || 'development';
+const IOT_ENDPOINT = process.env.IOT_ENDPOINT;
+const STACKNAME = process.env.STACKNAME;
 
 module.exports = {
   context: path.resolve(__dirname, "src"),
@@ -120,19 +122,23 @@ module.exports = {
       var awsIot = require('aws-iot-device-sdk');
 
       var shadow = awsIot.thingShadow({
-         keyPath: '/certificates/iot-Controller.key.pem',
-        certPath: '/certificates/iot-Controller.cert.pem',
-          caPath: '/certificates/root-CA.cert.pem',
+        keyPath: '/certificates/' + STACKNAME + '-Controller.key.pem',
+        certPath: '/certificates/' + STACKNAME + '-Controller.cert.pem',
+        caPath: '/certificates/root-CA.cert.pem',
         clientId: 'iot-Controller',
-            host: 'a1sjiazdf7qxjd.iot.ap-southeast-2.amazonaws.com'
+        host: IOT_ENDPOINT
       });
 
       shadow.on('connect', function () {
-        console.log("Connected. Subscribing...");
-        shadow.register("iot-TempSensor01");
+        console.log("Connected. Subscribing to " + STACKNAME + "-TempSensor01...");
+        shadow.register(STACKNAME + "-TempSensor01");
       });
 
       shadow.on('status', function() {
+        console.log(arguments);
+      });
+
+      shadow.on('message', function() {
         console.log(arguments);
       });
 

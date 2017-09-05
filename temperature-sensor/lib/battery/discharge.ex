@@ -5,7 +5,7 @@ defmodule Battery.Discharge do
     GenServer.start_link(__MODULE__, %{}, [name: __MODULE__])
   end
 
-  def init(state) do
+  def init(_state) do
     schedule_work()
     {:ok, %{charge: 100}}
   end

@@ -1,0 +1,48 @@
+Resources:
+  SetHVACModeExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action: sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: SetHVACModeExecutionRole
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action: "logs:*"
+            Resource: arn:$(AWS::Partition):logs:$(AWS::Region):$(AWS::AccountId):*:*
+          - Effect: Allow
+            Action:
+            - "sns:ListSubscriptionsByTopic"
+            - "sns:CreateTopic"
+            - "sns:SetTopicAttributes"
+            - "sns:Subscribe"
+            - "sns:Publish"
+            Resource: "*"
+          - Effect: Allow
+            Action: "iot:UpdateThingShadow"
+            Resource: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):thing/$(AWS::StackName)-HVAC
+
+  SetHVACMode:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: /lambdas/setHVACMode/build/dist.zip
+      Description: Sets the HVAC mode, and turns on the fan when required
+      Handler: index.setHVACMode
+      MemorySize: 128
+      Role: arn:$(AWS::Partition):iam::$(AWS::AccountId):role/$(SetHVACModeExecutionRole)
+      Runtime: nodejs6.10
+      Timeout: 3
+      Environment:
+        Variables:
+          ENDPOINT: a1sjiazdf7qxjd.iot.ap-southeast-2.amazonaws.com
+          THING_NAME: $(AWS::StackName)-HVAC

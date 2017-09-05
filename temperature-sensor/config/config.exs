@@ -11,7 +11,10 @@ config :temperature_sensor,
 
 config :temperature_sensor,
   mqtt: [client_id: "tempsensor01",
-    host: "a1sjiazdf7qxjd.iot.ap-southeast-2.amazonaws.com",
+    host: System.get_env("IOT_ENDPOINT"),
     port: 8883,
     timeout: 5000,
-    ssl: [cacertfile: "/certificates/root-CA.cert.pem", certfile: "/certificates/iot-TempSensor01.cert.pem", keyfile: "/certificates/iot-TempSensor01.key.pem"]]
+    ssl: [cacertfile: "/certificates/root-CA.cert.pem", certfile: "/certificates/#{System.get_env("STACKNAME")}-TempSensor01.cert.pem", keyfile: "/certificates/#{System.get_env("STACKNAME")}-TempSensor01.key.pem"]]
+
+config :temperature_sensor,
+  publish_topic: "$aws/things/#{System.get_env("STACKNAME")}-TempSensor01/shadow/update"
