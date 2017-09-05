@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eo pipefail
+
+STACK_NAME="${1:?"You need to specify the stack name"}"
+
+aws delete-stack --stack-name ${STACK_NAME}

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Provide infrastructure completions
+# Usage: infrastructure deactivate-certificate [stack] [thing]
+# Summary: Generate csr for a thing
+#
+# Example:
+#   infrastructure deactivate-certificate iot BedroomLamp
+
+set -eo pipefail
+
+docker-compose run --rm infrastructure bash -c "/tools/bin/deactivate-certificate ${1} ${2}"

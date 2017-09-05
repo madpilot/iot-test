@@ -57,9 +57,13 @@ docker-compose run
 
 You can now hit [http://localhost:8080](http://localhost:8080) to see a non-updating UI.
 
-To remove the stack:
+# Removing the stack
 
-```bash
-infrastructure/bin/infrastructure revoke-certificates
-infrastructure/bin/infrastructure delete-stack $STACK_NAME
+You have to do it manually.
+
+```
+infrastructure/bin/infrastructure deactivate-certificate $STACKNAME TempSensor01
+infrastructure/bin/infrastructure deactivate-certificate $STACKNAME HVAC
+infrastructure/bin/infrastructure deactivate-certificate $STACKNAME Controller
+infrastructure/bin/infrastructure stack delete $STACKNAME
 ```
