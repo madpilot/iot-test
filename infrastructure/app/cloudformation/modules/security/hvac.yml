@@ -8,20 +8,21 @@ Parameters:
       MIICzjCCAbYCAQAwgYgxCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES
       MBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u
       czENMAsGA1UEAwwESFZBQzEkMCIGCSqGSIb3DQEJARYVbXlsZXNAbWFkcGlsb3Qu
-      Y29tLmF1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq3ezE4ezToe3
-      ES/zVPJ6xSeqVV5OpeM2muuwJUcdJs+pUoA3GIYIL9ofA57ZVbDillqVT8EmWqa7
-      dFMUFJ2xymN1V/tfdwAjzOIOfp/wZKujb2V1YaCxB/QuiSKZvbEA6tZGtouI4Szi
-      plwAeDbsJyK2+odQzAQIotEMJ2Ut+QnyzInE9+vCt8hoFZqW/immDbUiJWUFc1k1
-      +lmEUP6dHRWX75qnwx08i7Cmg+KMga/W+edNizt31CrLNq5A5XMSlRCnQziiQyj6
-      6dHqEMlQFtDiC8Pnwcs1M7gOdX+T/VATFUrzwMucMz1rRrX3ozm48zJIQGpLyB4k
-      jsMv/PMldQIDAQABoAAwDQYJKoZIhvcNAQELBQADggEBAGZHNizQjRFiZuPNs3vT
-      GONvKoa08XTQ7Qdi0XDtpimTAkAFJhgGELVFYpK0N/jnf9eOcgXHi2NTjWs6SjeZ
-      C3TqvfcsB2QKfxFFTA6h/5YbSpCgEvl+y8OaCqgW63qKqBmL+SgzLTEd68IRraOp
-      iVUATtSMOkfQviIRMdGpmq/HygWzGN26gGHWNs74dqz7IzNeDhp/Yr3dnxxYq/8L
-      RClxVInX93/v8UYoiaB1b3ntDVGkRKIKgz6Kgyzr1PNEmXZOiTCWxs1XPNpJwrWv
-      F7DZrN1gmFLK3B3Ou+kCa+T63tPSDzxidE/G0G25KyQf2JcQ0EDMDpmWyKhBP7mL
-      4IM=
+      Y29tLmF1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyChdMA/Izgad
+      o2cnSutGt/FjNItjd1PprmA9jr7L+cFb+A9AQlbmnr0j3IKLTKELLakgzTR9i8OP
+      JxsiXqHHEe8VCUFexC6DYC5OMGvbq1gUu8x1gCXC6TnHChC0VzhBCMv66cnaaJ3R
+      WiKxSYAurMAdlky88LpYHCZyVvXdIovgChoPsex2YwrBbCda7PDrfc8H8cdZC2rG
+      yB2+j1QAQ1U4PrTsA/5VsgFgZkvk3xbBVVw0t7aYNFCr0aguLhaeIAsXrzH0WBKi
+      DW2AqpZH0Z5hDqg299xw9W4XBy1nAvjc5BsTeegKOq1r6AOSDq9Bnc2ns4xdxer7
+      241A/R6zJwIDAQABoAAwDQYJKoZIhvcNAQELBQADggEBAG3HTbeFlnPTZoBShC4V
+      3yC7dAfRqFo7DHXvtmnKlT8nguOA+MqP2X7IJhqKUxkZ3nMufhD0VBsyUwRTVH+U
+      hSeviPHr72wISGAa3ftzE3371/nspum4oFeoK5nZTc3MYQMvju6n6pl7zHIcz/n4
+      Dd/OA5HEnTYonOvuBsL3ZM9SRQGiQZs6wWwG5Kn+wqdlsCWtfV+uRgx96gUZkRpN
+      XAgk0nb3dXqjHtguIZu0BODD1y6tkavjCKSj6UJue9fmpGDRv+djtdKro85HU2fM
+      aad4XUYiuz/wcpXPRllmLPcPJYJE2ibZUCq3coGHgvBg03soshUiLBc9JHMcayIZ
+      R2A=
       -----END CERTIFICATE REQUEST-----
+
 
 
 Resources:
@@ -34,8 +35,8 @@ Resources:
           Effect: "Allow"
           Action:
             - "iot:Publish"
-            - "iot:UpdateThingShadow"
-            - "iot:DeleteThingShadow"
+            - "iot:UpdateThingsShadow"
+            - "iot:DeleteThingsShadow"
           Resource:
             - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/iot-HVAC/shadow/update
             - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/iot-HVAC/shadow/delete
@@ -50,7 +51,7 @@ Resources:
           Action:
             - "iot:Subscribe"
             - "iot:Receive"
-            - "iot:GetThingShadow"
+            - "iot:GetThingsShadow"
           Resource:
             - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/update
             - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/delete

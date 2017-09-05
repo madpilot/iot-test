@@ -1,0 +1,63 @@
+---
+Parameters:
+  ControllerCertificateSigningRequest:
+    Type: String
+    Description: Certificate Signing Request for the Controller
+    Default: |
+      -----BEGIN CERTIFICATE REQUEST-----
+      MIIC1DCCAbwCAQAwgY4xCzAJBgNVBAYTAkFVMREwDwYDVQQIDAhWaWN0b3JpYTES
+      MBAGA1UEBwwJTWVsYm91cm5lMR0wGwYDVQQKDBRNYWRQaWxvdCBQcm9kdWN0aW9u
+      czETMBEGA1UEAwwKQ29udHJvbGxlcjEkMCIGCSqGSIb3DQEJARYVbXlsZXNAbWFk
+      cGlsb3QuY29tLmF1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsp4g
+      tKT0OsgA+d1IivdrgUux6hfRmlNJfCEpClusnqSd2NfjhCUlxl+vBfdViDiMIcK0
+      PihpSrwKvnZ12+IF+DfiM+8y+PwI578c5Z7JWIRIxXHJhdhMYukLowDYjFPkQwrd
+      761qc5hlETFlD9gqXCmGglvLrNuDFBx7ptxdzPBnwdoa1VcdXBROS7CIlCv6lsWH
+      QIpwfoH2ze4NhnO/4PdIWPdvrwuNVsySdE2YcO7XpRHz1OOYre5sAg3hPETPy7YO
+      mA8fAI2BCMNo2qfPA+7LsQynkimnLjKAW7C5AMricKjxH3ibCWUoCnR2ADVx6C8m
+      /0o/ZfOp2QKAboiRBQIDAQABoAAwDQYJKoZIhvcNAQELBQADggEBAGUKDAPkk0ov
+      iJ8jOdp+3Ordh/1ED/AOWVQ+h3fGiwCFfNYH7JC3zavC9tuFgVsGxE6pr5njAfQl
+      J8YU7OtY19HKTtjx7/4cW5KsQ9Cr1rD75EUVnjcvQ08bT4KahxJBUrS5qOrpek6P
+      nCvZss32hgmK+CiVQGykJrd4x5n36raj5z9sUR3ZYnEhaq3tMCrcsFToc2dLN4Bg
+      XB5+Nmj+TS6yDRm5SoZr+rp/oVyFicuFKbNW1jS57ONmi/mT4RHSgYTeapAkmiQy
+      0/TpH9Eoz5pLLMY3rA/AoENu4N52ABAr3Qa7Yo7zutXOrj61Vgkbn35tkWy+17f+
+      RrtvCIybgec=
+      -----END CERTIFICATE REQUEST-----
+
+
+Resources:
+  ControllerSubscribePolicy:
+    Type: "AWS::IoT::Policy"
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Action:
+            - "iot:Subscribe"
+            - "iot:Receive"
+            - "iot:GetThingsShadow"
+          Resource: "*"
+
+  ControllerCertificate:
+    Type: "AWS::IoT::Certificate"
+    Properties:
+      CertificateSigningRequest: $(ControllerCertificateSigningRequest)
+      Status: ACTIVE
+
+  ControllerCertificateAttach:
+    Type: "AWS::IoT::ThingPrincipalAttachment"
+    Properties:
+      ThingName: $(Controller)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(ControllerCertificate)
+
+  ControllerConnectPolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(ConnectPolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(ControllerCertificate)
+
+  ControllerSubscribePolicyAttach:
+    Type: "AWS::IoT::PolicyPrincipalAttachment"
+    Properties:
+      PolicyName: $(ControllerSubscribePolicy)
+      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(ControllerCertificate)

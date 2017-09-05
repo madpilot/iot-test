@@ -23,6 +23,8 @@ case "$1" in
   diff)
     docker-compose run --rm -w "/tools/app/cloudformation" infrastructure bash -c "/tools/bin/diff-stack ${@:2}"
   ;;
+  delete)
+    docker-compose run --rm -w "/tools/app/cloudformation" infrastructure bash -c "/tools/bin/deleted-stack ${@:2}"
   *)
     infrastructure help stack
   ;;

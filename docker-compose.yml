@@ -10,13 +10,16 @@ services:
     volumes:
       - ./infrastructure:/tools/
       - ./certificates:/certificates
+      - ./lambdas:/lambdas
       - $HOME/.aws:/root/.aws:ro
     tmpfs:
       - /tmp
     environment:
-      AWS_ACCESS_KEY_ID:
-      AWS_SECRET_ACCESS_KEY:
-      AWS_DEFAULT_REGION:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_REGION
+      - STACKNAME
+      - IOT_ENDPOINT
 
   mosquitto-client:
     build:
@@ -27,17 +30,11 @@ services:
       - ./certificates:/certificates
       - $HOME/.aws:/root/.aws:ro
     environment:
-      AWS_ACCESS_KEY_ID:
-      AWS_SECRET_ACCESS_KEY:
-      AWS_DEFAULT_REGION:
-
-  lambdas:
-    build:
-      context: lambdas/.
-      dockerfile: Dockerfile
-    image: iot-test/lambdas
-    volumes:
-      - ./lambdas:/lambdas
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_REGION
+      - STACKNAME
+      - IOT_ENDPOINT
 
   temperature-sensor:
     build:
@@ -49,6 +46,40 @@ services:
       - ./certificates:/certificates
       - $HOME/.aws:/root/.aws:ro
     environment:
-      AWS_ACCESS_KEY_ID:
-      AWS_SECRET_ACCESS_KEY:
-      AWS_DEFAULT_REGION:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_REGION
+      - STACKNAME
+      - IOT_ENDPOINT
+
+  lambdas:
+    build:
+      context: lambdas/.
+      dockerfile: Dockerfile
+    image: iot-test/lambdas
+    volumes:
+      - ./lambdas:/lambdas
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_REGION
+      - STACKNAME
+      - IOT_ENDPOINT
+
+  controller:
+    build:
+      context: controller/.
+      dockerfile: Dockerfile
+    image: iot-test/controller
+    volumes:
+      - ./controller:/controller
+      - ./certificates:/certificates
+      - $HOME/.aws:/root/.aws:ro
+    ports:
+      - "8080:8080"
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_REGION
+      - STACKNAME
+      - IOT_ENDPOINT

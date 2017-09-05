@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'bundler'
+Bundler.require
+
+AWS_REGION = ENV['AWS_REGION'] || "ap-southeast-2"
+iot = Aws::IoT::Client.new(region: AWS_REGION)
+thing_name = "#{ARGV[0]}-#{ARGV[1]}"
+
+# Find the certificate that belongs to the thing
+puts "Fetching #{thing_name}'s certificates"
+arns = iot.list_thing_principals(thing_name: thing_name).principals
+
+if arns.length == 0
+  puts "No certificates found."
+  exit(1)
+else
+  puts "Found #{arns.size} certificates."
+end
+
+# Note - this only supports one certificate. If there is multiple, it use the last one
+iot.list_certificates.certificates.each do |certificate|
+  if arns.include?(certificate.certificate_arn)
+     pem = iot.update_certificate(certificate_id: certificate.certificate_id, new_status: 'INACTIVE')
+    puts "Deactivated to #{certificate.certificate_arn}"
+  end
+ end
