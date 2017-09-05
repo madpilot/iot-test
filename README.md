@@ -56,10 +56,18 @@ infrastructure/bin/infrastructure generate-csr $STACKNAME HVAC
 infrastructure/bin/infrastructure generate-csr $STACKNAME Controller
 infrastructure/bin/infrastructure stack create $STACKNAME
 infrastructure/bin/infrastructure update-lambda iot SetHVACMode
-docker-compose run
+docker-compose run temperature-sensor
 ```
 
-You can now hit [http://localhost:8080](http://localhost:8080) to see a non-updating UI.
+You can now go to the AWS IoT console, and see the shadow document for the temperature sensor update. You can also go to the AWS Lambda console, and trigger a test event with the following payload:
+
+```json
+{
+  "temperature": 31,
+  "battery": 67
+}
+```
+and see the HVAC shadow document updated with a request to turn on the cooling.
 
 # Removing the stack
 
