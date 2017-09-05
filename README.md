@@ -25,6 +25,8 @@ I believe there is a permissions issue.
 
 ## Infrastructure diagram
 
+![](https://raw.githubusercontent.com/madpilot/iot-test/master/infrastructure.png)
+
 ## Bringing up the stack
 
 If you want to see all the bits not working together:
