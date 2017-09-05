@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Provide infrastructure completions
+# Usage: infrastructure fetch-certificates [stack] [lambda]
+# Summary: Fetch auto-generated certificate for a thing
+#
+# Example:
+#   infrastructure fetch-certificate iot setHVACMode
+
+set -eo pipefail
+
+docker-compose run --rm infrastructure bash -c "/tools/bin/update-lambda ${1} ${2}"

@@ -44,10 +44,12 @@ cd iot-test
 
 ```bash
 docker-compose build
+docker-compose run -w /lambdas/setHVACMode lambdas yarn build
 infrastructure/bin/infrastructure generate-csr $STACKNAME TempSensor01
 infrastructure/bin/infrastructure generate-csr $STACKNAME HVAC
 infrastructure/bin/infrastructure generate-csr $STACKNAME Controller
 infrastructure/bin/infrastructure stack create $STACKNAME
+infrastructure/bin/infrastructure update-lambda iot SetHVACMode
 docker-compose run
 ```
 

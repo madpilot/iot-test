@@ -98,7 +98,7 @@
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
-          "ZipFile": "/lambdas/setHVACMode/build/dist.zip"
+          "ZipFile": "fileb://lambdas/setHVACMode/build/dist.zip"
         },
         "Description": "Sets the HVAC mode, and turns on the fan when required",
         "Handler": "index.setHVACMode",
