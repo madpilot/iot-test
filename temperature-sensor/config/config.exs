@@ -15,5 +15,3 @@ config :temperature_sensor,
     port: 8883,
     timeout: 5000,
     ssl: [cacertfile: "/certificates/root-CA.cert.pem", certfile: "/certificates/iot-TempSensor01.cert.pem", keyfile: "/certificates/iot-TempSensor01.key.pem"]]
-
-#import_config "#{Mix.env}.exs"
