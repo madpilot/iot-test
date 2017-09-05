@@ -41,6 +41,8 @@ export STACK_NAME=[A stack name. iot would work]
 export IOT_ENDPOINT=[Your AWS IoT endpoint. See the notes]
 ```
 
+Note: To find your endpoint, Go to the [IoT console](https://ap-southeast-2.console.aws.amazon.com/iotv2/home?region=ap-southeast-2#/thinghub) and click a thing, then click Interact.
+
 ```bash
 git clone git@github.com:madpilot/Iot-test
 cd iot-test
