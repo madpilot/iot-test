@@ -73,7 +73,7 @@ You can now go to the AWS IoT console, and see the shadow document for the tempe
 ```
 and see the HVAC shadow document updated with a request to turn on the cooling.
 
-# Removing the stack
+## Removing the stack
 
 ```
 infrastructure/bin/infrastructure deactivate-certificate $STACKNAME TempSensor01
@@ -81,6 +81,6 @@ infrastructure/bin/infrastructure deactivate-certificate $STACKNAME HVAC
 infrastructure/bin/infrastructure deactivate-certificate $STACKNAME Controller
 infrastructure/bin/infrastructure stack delete $STACKNAME
 ```
-# Wrap up
+## Wrap up
 
 Unfortunately, I didn't finish the challenge because of the AWS permissions rabbit hole. However, I thought this post-mortem was still worth it to explain my thinking, and process.
