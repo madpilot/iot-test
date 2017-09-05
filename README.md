@@ -1,11 +1,13 @@
 # IoT Design Challenge
 ## A Post Mortem
 
-The design I wanted to implement was fairly simple: a temperature sensor that spoke to a HVAC unit. The two devices would talk to eachnother using MQTT provided by AWS IoT.
+The design I wanted to implement was fairly simple: a temperature sensor that spoke to a HVAC unit. The two devices would talk to each other using MQTT provided by AWS IoT.
 
-I decided to start by setting up AWS. While they provide a UI for this, I wanted it to be reproducible for the assessor's so I decided to use cloudformation. I set up a docker image that would help me create the Cloudformation stack using cfoo and cirrus.
+To simluate a low-power, sleepy device, the temperature sensor wakes up once a minute, reads the "sensor" (In this case, the current temperature in Melbourne), and if there is a change, transmits it. There is also a fake battery sensor that decrements once every five minutes.
 
-After creating the CSRs for each device, the cloud formation document would spin up the three required devices: the temperature sensor, the HVAC and the controller. It also set up a lambs that would be triggered when ever the temperature sensor updated.
+I started by setting up AWS. While they provide a UI for this, I wanted it to be reproducible for the assessor's so created a CloudFormation stack. I set up a docker image that would help me create the stack using cfoo and Cirrus.
+
+After creating the Certificate Signing Requests for each device, the CloudFormation document would spin up the three required devices: the temperature sensor, the HVAC and the controller. It also set up a lambda that would be triggered whenever the temperature sensor updated.
 
 Except it didn't.
 
@@ -17,11 +19,13 @@ This didn't work either.
 
 Using the certificate, I could publish events, but no subscribed events were coming through. At this point I was really running out of time, and I had yet to do the controller interface.
 
-I spun up a simple Node.JS app using the official AWS non library, and it was unable to subscribe to topics.
+I spun up a simple Node.JS app using the official AWS non library, but that didn't work either.
 
 Huh?
 
 I believe there is a permissions issue.
+
+Due to hitting the deadline, I was forced to abandon the project, and wrote up this post-mortem instead.
 
 ## Infrastructure diagram
 
@@ -79,3 +83,6 @@ infrastructure/bin/infrastructure deactivate-certificate $STACKNAME HVAC
 infrastructure/bin/infrastructure deactivate-certificate $STACKNAME Controller
 infrastructure/bin/infrastructure stack delete $STACKNAME
 ```
+# Wrap up
+
+Unfortunately, I didn't finish the challenge because of the AWS permissions rabbit hole. Hoever, I thought this post-mortem was still worth it to explain my thinking, and process.
