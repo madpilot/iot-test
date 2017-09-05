@@ -39,8 +39,10 @@ export STACK_NAME=[A stack name. iot would work]
 export IOT_ENDPOINT=[Your AWS IoT endpoint. See the notes]
 ```
 
+```bash
 git clone git@github.com:madpilot/Iot-test
 cd iot-test
+```
 
 ```bash
 docker-compose build
