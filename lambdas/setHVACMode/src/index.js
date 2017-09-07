@@ -63,7 +63,7 @@ function setHVACMode(event, context, callback) {
 
   let state = {
     state: {
-      reported: message
+      desired: message
     }
   }
 

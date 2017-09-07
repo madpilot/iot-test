@@ -48,16 +48,16 @@ Resources:
     Type: "AWS::IoT::ThingPrincipalAttachment"
     Properties:
       ThingName: $(Controller)
-      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(ControllerCertificate)
+      Principal: $(ControllerCertificate[Arn])
 
   ControllerConnectPolicyAttach:
     Type: "AWS::IoT::PolicyPrincipalAttachment"
     Properties:
       PolicyName: $(ConnectPolicy)
-      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(ControllerCertificate)
+      Principal: $(ControllerCertificate[Arn])
 
   ControllerSubscribePolicyAttach:
     Type: "AWS::IoT::PolicyPrincipalAttachment"
     Properties:
       PolicyName: $(ControllerSubscribePolicy)
-      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(ControllerCertificate)
+      Principal: $(ControllerCertificate[Arn])

@@ -25,6 +25,7 @@ case "$1" in
   ;;
   delete)
     docker-compose run --rm -w "/tools/app/cloudformation" infrastructure bash -c "/tools/bin/deleted-stack ${@:2}"
+    ;;
   *)
     infrastructure help stack
   ;;

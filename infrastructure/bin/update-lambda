@@ -4,6 +4,6 @@ set -eo pipefail
 
 STACK_NAME="${1:?"You need to specify the stack name"}"
 FUNCTION_NAME="${2:?"You need to specify a function"}"
-FUNCTION=$(aws lambda list-functions | jq ".Functions[] .FunctionName" -r - | grep ${STACKNAME}-${FUNCTION_NAME})
-
+FUNCTION=$(aws lambda list-functions | jq ".Functions[] .FunctionName" -r - | grep "${STACK_NAME}-${FUNCTION_NAME}")
+echo "Updating ${FUNCTION}"
 aws lambda update-function-code --function-name ${FUNCTION} --zip-file fileb:///lambdas/${FUNCTION_NAME}/build/dist.zip

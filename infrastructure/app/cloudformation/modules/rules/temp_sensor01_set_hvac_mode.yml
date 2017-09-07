@@ -18,16 +18,16 @@ Resources:
           Statement:
           - Effect: Allow
             Action: "lambda:InvokeFunction"
-            Resource: arn:$(AWS::Partition):lambda:$(AWS::Region):$(AWS::AccountId):function/$(SetHVACMode)
+            Resource: $(SetHVACMode[Arn])
 
   TempSensor01SetHVACModeRule:
     Type: "AWS::IoT::TopicRule"
     Properties:
       TopicRulePayload:
         Description: "Works out if the HVAC needs to be turned on or off"
-        Sql: SELECT temperature AS temperature FROM '\$aws/things/iot-TempSensor01/shadow/update/accepted'
+        Sql: SELECT state.reported.temperature AS temperature FROM '\$aws/things/iot-TempSensor01/shadow/update/accepted'
         RuleDisabled: false
         AwsIotSqlVersion: "2016-03-23"
         Actions:
         - Lambda:
-            FunctionArn: arn:$(AWS::Partition):lambda:$(AWS::Region):$(AWS::AccountId):function/$(SetHVACMode)
+            FunctionArn: $(SetHVACMode[Arn])

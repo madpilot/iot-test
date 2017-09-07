@@ -94,32 +94,32 @@
         ]
       }
     },
+    "LambdaPermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SetHVACMode",
+            "Arn"
+          ]
+        },
+        "Principal": "iot.amazonaws.com"
+      }
+    },
     "SetHVACMode": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
-          "ZipFile": "fileb://lambdas/setHVACMode/build/dist.zip"
+          "ZipFile": "function setHVACMode(event, context, callback) { callback(\"Please upload some code\") };"
         },
         "Description": "Sets the HVAC mode, and turns on the fan when required",
         "Handler": "index.setHVACMode",
         "MemorySize": 128,
         "Role": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iam::",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":role/",
-              {
-                "Ref": "SetHVACModeExecutionRole"
-              }
-            ]
+          "Fn::GetAtt": [
+            "SetHVACModeExecutionRole",
+            "Arn"
           ]
         },
         "Runtime": "nodejs6.10",
@@ -230,26 +230,9 @@
                   "Effect": "Allow",
                   "Action": "lambda:InvokeFunction",
                   "Resource": {
-                    "Fn::Join": [
-                      "",
-                      [
-                        "arn:",
-                        {
-                          "Ref": "AWS::Partition"
-                        },
-                        ":lambda:",
-                        {
-                          "Ref": "AWS::Region"
-                        },
-                        ":",
-                        {
-                          "Ref": "AWS::AccountId"
-                        },
-                        ":function/",
-                        {
-                          "Ref": "SetHVACMode"
-                        }
-                      ]
+                    "Fn::GetAtt": [
+                      "SetHVACMode",
+                      "Arn"
                     ]
                   }
                 }
@@ -264,33 +247,16 @@
       "Properties": {
         "TopicRulePayload": {
           "Description": "Works out if the HVAC needs to be turned on or off",
-          "Sql": "SELECT temperature AS temperature FROM '$aws/things/iot-TempSensor01/shadow/update/accepted'",
+          "Sql": "SELECT state.reported.temperature AS temperature FROM '$aws/things/iot-TempSensor01/shadow/update/accepted'",
           "RuleDisabled": "false",
           "AwsIotSqlVersion": "2016-03-23",
           "Actions": [
             {
               "Lambda": {
                 "FunctionArn": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition"
-                      },
-                      ":lambda:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":function/",
-                      {
-                        "Ref": "SetHVACMode"
-                      }
-                    ]
+                  "Fn::GetAtt": [
+                    "SetHVACMode",
+                    "Arn"
                   ]
                 }
               }
@@ -332,26 +298,9 @@
           "Ref": "Controller"
         },
         "Principal": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iot:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":cert/",
-              {
-                "Ref": "ControllerCertificate"
-              }
-            ]
+          "Fn::GetAtt": [
+            "ControllerCertificate",
+            "Arn"
           ]
         }
       }
@@ -363,26 +312,9 @@
           "Ref": "ConnectPolicy"
         },
         "Principal": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iot:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":cert/",
-              {
-                "Ref": "ControllerCertificate"
-              }
-            ]
+          "Fn::GetAtt": [
+            "ControllerCertificate",
+            "Arn"
           ]
         }
       }
@@ -394,26 +326,9 @@
           "Ref": "ControllerSubscribePolicy"
         },
         "Principal": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iot:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":cert/",
-              {
-                "Ref": "ControllerCertificate"
-              }
-            ]
+          "Fn::GetAtt": [
+            "ControllerCertificate",
+            "Arn"
           ]
         }
       }
@@ -447,7 +362,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topic/$aws/things/iot-HVAC/shadow/update"
+                    ":topic/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-HVAC/shadow/update"
                   ]
                 ]
               },
@@ -467,7 +386,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topic/$aws/things/iot-HVAC/shadow/delete"
+                    ":topic/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-HVAC/shadow/delete"
                   ]
                 ]
               }
@@ -505,7 +428,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topicfilter/$aws/things/iot-HVAC/shadow/update"
+                    ":topicfilter/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-HVAC/shadow/update"
                   ]
                 ]
               },
@@ -525,7 +452,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topicfilter/$aws/things/iot-HVAC/shadow/delete"
+                    ":topicfilter/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-HVAC/shadow/delete"
                   ]
                 ]
               },
@@ -545,7 +476,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topicfilter/$aws/things/iot-HVAC/shadow/update/accepted"
+                    ":topicfilter/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-HVAC/shadow/update/accepted"
                   ]
                 ]
               },
@@ -565,7 +500,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topicfilter/$aws/things/iot-HVAC/shadow/update/rejected"
+                    ":topicfilter/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-HVAC/shadow/update/rejected"
                   ]
                 ]
               },
@@ -585,7 +524,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topicfilter/$aws/things/iot-HVAC/shadow/delete/accepted"
+                    ":topicfilter/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-HVAC/shadow/delete/accepted"
                   ]
                 ]
               },
@@ -605,7 +548,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topicfilter/$aws/things/iot-HVAC/shadow/delete/rejected"
+                    ":topicfilter/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-HVAC/shadow/delete/rejected"
                   ]
                 ]
               }
@@ -630,26 +577,9 @@
           "Ref": "HVAC"
         },
         "Principal": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iot:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":cert/",
-              {
-                "Ref": "HVACCertificate"
-              }
-            ]
+          "Fn::GetAtt": [
+            "HVACCertificate",
+            "Arn"
           ]
         }
       }
@@ -661,26 +591,9 @@
           "Ref": "ConnectPolicy"
         },
         "Principal": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iot:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":cert/",
-              {
-                "Ref": "HVACCertificate"
-              }
-            ]
+          "Fn::GetAtt": [
+            "HVACCertificate",
+            "Arn"
           ]
         }
       }
@@ -692,26 +605,9 @@
           "Ref": "HVACPublishPolicy"
         },
         "Principal": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iot:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":cert/",
-              {
-                "Ref": "HVACCertificate"
-              }
-            ]
+          "Fn::GetAtt": [
+            "HVACCertificate",
+            "Arn"
           ]
         }
       }
@@ -723,26 +619,9 @@
           "Ref": "HVACSubscribePolicy"
         },
         "Principal": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iot:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":cert/",
-              {
-                "Ref": "HVACCertificate"
-              }
-            ]
+          "Fn::GetAtt": [
+            "HVACCertificate",
+            "Arn"
           ]
         }
       }
@@ -776,7 +655,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topic/$aws/things/iot-TempSensor01/shadow/update"
+                    ":topic/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-TempSensor01/shadow/update"
                   ]
                 ]
               },
@@ -796,7 +679,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topic/$aws/things/iot-TempSensor01/shadow/delete"
+                    ":topic/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-TempSensor01/shadow/delete"
                   ]
                 ]
               }
@@ -834,7 +721,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topicfilter/$aws/things/iot-TempSensor01/shadow/update/accepted"
+                    ":topicfilter/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-TempSensor01/shadow/update/accepted"
                   ]
                 ]
               },
@@ -854,7 +745,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topicfilter/$aws/things/iot-TempSensor01/shadow/update/rejected"
+                    ":topicfilter/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-TempSensor01/shadow/update/rejected"
                   ]
                 ]
               },
@@ -874,7 +769,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topicfilter/$aws/things/iot-TempSensor01/shadow/delete/accepted"
+                    ":topicfilter/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-TempSensor01/shadow/delete/accepted"
                   ]
                 ]
               },
@@ -894,7 +793,11 @@
                     {
                       "Ref": "AWS::AccountId"
                     },
-                    ":topicfilter/$aws/things/iot-TempSensor01/shadow/delete/rejected"
+                    ":topicfilter/$aws/things/",
+                    {
+                      "Ref": "AWS::StackName"
+                    },
+                    "-TempSensor01/shadow/delete/rejected"
                   ]
                 ]
               }
@@ -919,26 +822,9 @@
           "Ref": "TempSensor01"
         },
         "Principal": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iot:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":cert/",
-              {
-                "Ref": "TempSensor01Certificate"
-              }
-            ]
+          "Fn::GetAtt": [
+            "TempSensor01Certificate",
+            "Arn"
           ]
         }
       }
@@ -950,26 +836,9 @@
           "Ref": "ConnectPolicy"
         },
         "Principal": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iot:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":cert/",
-              {
-                "Ref": "TempSensor01Certificate"
-              }
-            ]
+          "Fn::GetAtt": [
+            "TempSensor01Certificate",
+            "Arn"
           ]
         }
       }
@@ -981,26 +850,9 @@
           "Ref": "TempSensor01PublishPolicy"
         },
         "Principal": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iot:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":cert/",
-              {
-                "Ref": "TempSensor01Certificate"
-              }
-            ]
+          "Fn::GetAtt": [
+            "TempSensor01Certificate",
+            "Arn"
           ]
         }
       }
@@ -1012,26 +864,9 @@
           "Ref": "TempSensor01SubscribePolicy"
         },
         "Principal": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":iot:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":cert/",
-              {
-                "Ref": "TempSensor01Certificate"
-              }
-            ]
+          "Fn::GetAtt": [
+            "TempSensor01Certificate",
+            "Arn"
           ]
         }
       }

@@ -31,15 +31,22 @@ Resources:
             Action: "iot:UpdateThingShadow"
             Resource: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):thing/$(AWS::StackName)-HVAC
 
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: $(SetHVACMode[Arn])
+      Principal: "iot.amazonaws.com"
+
   SetHVACMode:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        ZipFile: fileb://lambdas/setHVACMode/build/dist.zip
+        ZipFile: "function setHVACMode(event, context, callback) { callback(\"Please upload some code\") };"
       Description: Sets the HVAC mode, and turns on the fan when required
       Handler: index.setHVACMode
       MemorySize: 128
-      Role: arn:$(AWS::Partition):iam::$(AWS::AccountId):role/$(SetHVACModeExecutionRole)
+      Role: $(SetHVACModeExecutionRole[Arn])
       Runtime: nodejs6.10
       Timeout: 3
       Environment:

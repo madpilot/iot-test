@@ -37,6 +37,10 @@ If you want to see all the bits not working together:
 
 (Note: this will spin up a cloudformation stack and set resources up. This MAY incur some costs. You will obviously need an AWS  account)
 
+## UPDATE
+
+With some help from @zoltak, I worked out the missing bits... I also found a number of bugs in some scripts, but now the HVAC shadow is updating correctly!
+
 ```bash
 export AWS_ACCESS_KEY=[Your AWS Access Key]
 export AWS_SECRET_KEY=[Your AWS Secrey Key]
@@ -54,7 +58,7 @@ cd iot-test
 
 ```bash
 docker-compose build
-docker-compose run -w /lambdas/setHVACMode lambdas yarn build
+lambdas/bin/lambda build setHVACMode
 infrastructure/bin/infrastructure generate-csr $STACKNAME TempSensor01
 infrastructure/bin/infrastructure generate-csr $STACKNAME HVAC
 infrastructure/bin/infrastructure generate-csr $STACKNAME Controller

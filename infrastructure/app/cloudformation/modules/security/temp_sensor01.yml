@@ -36,8 +36,8 @@ Resources:
             - "iot:UpdateThingShadow"
             - "iot:DeleteThingShadow"
           Resource:
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/iot-TempSensor01/shadow/update
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/iot-TempSensor01/shadow/delete
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/$(AWS::StackName)-TempSensor01/shadow/update
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/$(AWS::StackName)-TempSensor01/shadow/delete
 
   TempSensor01SubscribePolicy:
     Type: "AWS::IoT::Policy"
@@ -51,10 +51,10 @@ Resources:
             - "iot:Receive"
             - "iot:GetThingShadow"
           Resource:
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/update/accepted
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/update/rejected
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/delete/accepted
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-TempSensor01/shadow/delete/rejected
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/$(AWS::StackName)-TempSensor01/shadow/update/accepted
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/$(AWS::StackName)-TempSensor01/shadow/update/rejected
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/$(AWS::StackName)-TempSensor01/shadow/delete/accepted
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/$(AWS::StackName)-TempSensor01/shadow/delete/rejected
 
 
   TempSensor01Certificate:
@@ -67,22 +67,22 @@ Resources:
     Type: "AWS::IoT::ThingPrincipalAttachment"
     Properties:
       ThingName: $(TempSensor01)
-      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(TempSensor01Certificate)
+      Principal: $(TempSensor01Certificate[Arn])
 
   TempSensor01ConnectPolicyAttach:
     Type: "AWS::IoT::PolicyPrincipalAttachment"
     Properties:
       PolicyName: $(ConnectPolicy)
-      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(TempSensor01Certificate)
+      Principal: $(TempSensor01Certificate[Arn])
 
   TempSensor01PublishPolicyAttach:
     Type: "AWS::IoT::PolicyPrincipalAttachment"
     Properties:
       PolicyName: $(TempSensor01PublishPolicy)
-      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(TempSensor01Certificate)
+      Principal: $(TempSensor01Certificate[Arn])
 
   TempSensor01SubscribePolicyAttach:
     Type: "AWS::IoT::PolicyPrincipalAttachment"
     Properties:
       PolicyName: $(TempSensor01SubscribePolicy)
-      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(TempSensor01Certificate)
+      Principal: $(TempSensor01Certificate[Arn])

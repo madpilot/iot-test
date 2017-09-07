@@ -38,8 +38,8 @@ Resources:
             - "iot:UpdateThingsShadow"
             - "iot:DeleteThingsShadow"
           Resource:
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/iot-HVAC/shadow/update
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/iot-HVAC/shadow/delete
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/$(AWS::StackName)-HVAC/shadow/update
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topic/\$aws/things/$(AWS::StackName)-HVAC/shadow/delete
 
   HVACSubscribePolicy:
     Type: "AWS::IoT::Policy"
@@ -53,12 +53,12 @@ Resources:
             - "iot:Receive"
             - "iot:GetThingsShadow"
           Resource:
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/update
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/delete
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/update/accepted
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/update/rejected
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/delete/accepted
-            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/iot-HVAC/shadow/delete/rejected
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/$(AWS::StackName)-HVAC/shadow/update
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/$(AWS::StackName)-HVAC/shadow/delete
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/$(AWS::StackName)-HVAC/shadow/update/accepted
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/$(AWS::StackName)-HVAC/shadow/update/rejected
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/$(AWS::StackName)-HVAC/shadow/delete/accepted
+            - arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):topicfilter/\$aws/things/$(AWS::StackName)-HVAC/shadow/delete/rejected
 
   HVACCertificate:
     Type: "AWS::IoT::Certificate"
@@ -70,22 +70,22 @@ Resources:
     Type: "AWS::IoT::ThingPrincipalAttachment"
     Properties:
       ThingName: $(HVAC)
-      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(HVACCertificate)
+      Principal: $(HVACCertificate[Arn])
 
   HVACConnectPolicyAttach:
     Type: "AWS::IoT::PolicyPrincipalAttachment"
     Properties:
       PolicyName: $(ConnectPolicy)
-      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(HVACCertificate)
+      Principal: $(HVACCertificate[Arn])
 
   HVACPublishPolicyAttach:
     Type: "AWS::IoT::PolicyPrincipalAttachment"
     Properties:
       PolicyName: $(HVACPublishPolicy)
-      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(HVACCertificate)
+      Principal: $(HVACCertificate[Arn])
 
   HVACSubscribePolicyAttach:
     Type: "AWS::IoT::PolicyPrincipalAttachment"
     Properties:
       PolicyName: $(HVACSubscribePolicy)
-      Principal: arn:$(AWS::Partition):iot:$(AWS::Region):$(AWS::AccountId):cert/$(HVACCertificate)
+      Principal: $(HVACCertificate[Arn])
