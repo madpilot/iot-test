@@ -25,6 +25,11 @@ Huh?
 
 I believe there is a permissions issue.
 
+## UPDATE
+
+With some help from @zoltak, I worked out the [missing bits](https://github.com/madpilot/iot-test/commit/4f1f7017accaf965d08076fb554ae235acdfbe4f#diff-a651dacdcb4c6391d903fffc496c4282R34)... I also found a number of bugs in some scripts, but now the HVAC shadow is updating correctly!
+
+
 ## Infrastructure diagram
 
 ![](https://raw.githubusercontent.com/madpilot/iot-test/master/infrastructure.png)
@@ -34,10 +39,6 @@ I believe there is a permissions issue.
 If you want to see all the bits not working together:
 
 (Note: this will spin up a cloudformation stack and set resources up. This MAY incur some costs. You will obviously need an AWS account)
-
-## UPDATE
-
-With some help from @zoltak, I worked out the [missing bits](https://github.com/madpilot/iot-test/commit/4f1f7017accaf965d08076fb554ae235acdfbe4f#diff-a651dacdcb4c6391d903fffc496c4282R34)... I also found a number of bugs in some scripts, but now the HVAC shadow is updating correctly!
 
 ```bash
 export AWS_ACCESS_KEY=[Your AWS Access Key]
